@@ -10,8 +10,4 @@ f.write("\n날짜 :" + year + "-" + month + "-" + date)
 f.write("\nprepare:")
 f.write(input("prepare를 입력하세요 :"))
 
-
-
-
-
 f.close()
