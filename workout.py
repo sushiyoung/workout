@@ -1,12 +1,11 @@
 f = open('workout.txt', 'w',encoding='utf-8')
 
-d1 = input("날짜를 입력하세요 :")
-d2 = input("월을 입력하세요 :")
-d3 = input("일을 입려가세요 :")
-d = d1+d2+d3
+year, month, day = input("날짜를 입력하세요 :").split('-')
+print("입력날짜는 : {}년 {}월{}일 입니다.".format(year, month, day))
 
-print(d)
-f.write("\n날짜 :  ")
+date = "입력날짜는 : {}년 {}월{}일 입니다.".format(year, month, day)
+
+f.write(date)
 
 
 f.write("\nprepare:")
