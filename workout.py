@@ -1,14 +1,28 @@
-f = open('workout.txt', 'w',encoding='utf-8')
+# with open('workout.txt', 'a', encoding='utf-8') as f:
+        
+#     year, month, day = input("날짜를 입력하세요 :").split('-')
 
-year, month, day = input("날짜를 입력하세요 :").split('-')
-print("입력날짜는 : {}년 {}월{}일 입니다.".format(year, month, day))
+#     date = "입력날짜는 : {}년 {}월{}일 입니다.".format(year, month, day)
 
-date = "입력날짜는 : {}년 {}월{}일 입니다.".format(year, month, day)
-
-f.write(date)
+#     print(date)
+#     f.write(date)
 
 
-f.write("\nprepare:")
-f.write(input("prepare를 입력하세요 :"))
+#     f.write("\nprepare:")
+#     f.write(input("prepare를 입력하세요 :"))
 
-f.close()
+
+def input_date():
+    pass
+
+def write_file():
+    pass
+
+def print_file():
+    pass
+
+def main():
+    pass
+
+if __name__ == "__main__":
+    main()
