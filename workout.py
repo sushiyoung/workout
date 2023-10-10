@@ -13,16 +13,19 @@
 
 
 def input_date():
-    pass
+    print(input("날짜를 입력하세요 :"))
+
 
 def write_file():
-    pass
+    with open('workout.txt', 'w', encoding='utf-8') as f:
+        f.write(input("날짜를 입력하세요 :")) # 이쪽 부분 두번 나옴 개선 필요
 
 def print_file():
     pass
 
-def main():
-    pass
-
+def main():                 # 키오스크 처럼 생각(1주문,2주문..) 무조건 메인부터 실행
+    input_date()
+    write_file()
+    
 if __name__ == "__main__":
     main()
