@@ -18,7 +18,9 @@ def input_date():
 
 def write_file():
     with open('workout.txt', 'w', encoding='utf-8') as f:
-        f.write(input("날짜를 입력하세요 :")) # 이쪽 부분 두번 나옴 개선 필요
+        year, month, day = input("날짜를 입력하세요 :").split('-')
+        date = "입력날짜는 : {}년 {}월{}일 입니다.".format(year, month, day)   
+        f.write(date)
 
 def print_file():
     pass
