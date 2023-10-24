@@ -21,11 +21,11 @@ def input_bulidup():
 
 def write_file(year,month,day,prepare,mainwork,wod,bulidup):    
     with open('workout.txt', 'w', encoding='utf-8') as f:
-        date = "\n입력날짜는 : {}년 {}월{}일 입니다.".format(year, month, day)
-        work1 ="\n오늘의 prepare는 : {} 입니다.".format(prepare)
-        work2 ="\n오늘의 main운동은 : {} 입니다.".format(mainwork)
-        work3 ="\n오늘의 wod는 : {} 입니다.".format(wod)
-        work4 ="\n오늘의 buildup은 {} 입니다.".format(bulidup)
+        date = f"\n입력날짜는 : {year}년 {month}월{day}일 입니다."
+        work1 =f"\n오늘의 prepare는 : {prepare} 입니다."
+        work2 =f"\n오늘의 main운동은 : {mainwork} 입니다."
+        work3 =f"\n오늘의 wod는 : {wod} 입니다."
+        work4 =f"\n오늘의 buildup은 {bulidup} 입니다."
         f.write(date)
         f.write(work1)
         f.write(work2)
