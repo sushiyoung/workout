@@ -20,7 +20,8 @@ def input_bulidup():
 
 
 def write_file(year,month,day,prepare,mainwork,wod,bulidup):    
-    with open('workout.txt', 'w', encoding='utf-8') as f:
+    file_name = f"{year}-{month}-{day}.txt"
+    with open(file_name, 'w', encoding='utf-8') as f:
         date = f"\n입력날짜는 : {year}년 {month}월{day}일 입니다."
         work1 =f"\n오늘의 prepare는 : {prepare} 입니다."
         work2 =f"\n오늘의 main운동은 : {mainwork} 입니다."
@@ -33,10 +34,11 @@ def write_file(year,month,day,prepare,mainwork,wod,bulidup):
         f.write(work4)
         
 
-def print_file():              
-    with open('workout.txt', 'r', encoding='utf-8') as f:
-        workout = f.read()
-    print(workout)
+def print_file(year,month,day):              
+    file_name = f"{year}-{month}-{day}.txt"
+    with open(file_name, 'r', encoding='utf-8') as f:
+        file_content = f.read()
+    print(file_content)
 
         
 
@@ -47,9 +49,8 @@ def main():
     wod = input_wod()
     bulidup = input_bulidup()     
     write_file(year, month, day, prepare, mainwork,wod,bulidup)        
-    print_file()
+    print_file(year,month,day)
     
 
 if __name__ == "__main__":
     main()
-
