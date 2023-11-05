@@ -2,7 +2,8 @@ import os
 
 global file_path
 
-file_path = 'c:\\Bellgym_record\\'
+abspath = os.path.dirname(os.path.abspath(__file__))
+file_path = os.path.join(abspath, 'Bellgym_record')
 
 def workout_input(prompt):
     return input(f"{prompt}을 입력하세요: ")
