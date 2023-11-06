@@ -43,15 +43,28 @@ def read_file(year,month,day,name):
         
 
 def main(): 
-    name = workout_input("이름")
-    year, month, day = workout_input("날짜 (년-월-일):").split('-')
-    prepare = workout_input("prepare")
-    mainwork = workout_input("mainwork")
-    wod = workout_input("WOD")
-    bulidup = workout_input("Buildup")    
-    createFolder(file_path,name)
-    write_file(year, month, day, prepare, mainwork,wod,bulidup,name)        
-    read_file(year,month,day,name)
+    while True:
+        print("1. 운동기록입력")
+        print("2. 운동기록검색")
+        print("3. 종료")
+        choice = input(("입력을 선택하세요 (1번/2번/3번: )"))
+    
+        if choice == '1':
+            name = workout_input("이름")
+            year, month, day = workout_input("날짜 (년-월-일):").split('-')
+            prepare = workout_input("prepare")
+            mainwork = workout_input("mainwork")
+            wod = workout_input("WOD")
+            bulidup = workout_input("Buildup")    
+            write_file(year, month, day, prepare, mainwork,wod,bulidup,name)        
+            read_file(year,month,day,name)
+        elif choice == '2':
+            pass
+        elif choice == '3':
+            print("운동 프로그램을 종료합니다.")
+            break
+        else:
+            print("번호를 다시입력하세요")
     
 
 if __name__ == "__main__":
