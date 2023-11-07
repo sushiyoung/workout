@@ -40,27 +40,36 @@ def read_file(year,month,day,name):
         file_workout = f.read()
     print(file_workout)
 
-        
+
+def search_file():
+    name = workout_input("이름")
+    year, month, day = workout_input("날짜 (년-월-일):").split('-')
+
+    file_name = f"{name}-{year}-{month}-{day}.txt"
+
+    if os.path.isfile(file_path+ name+ '\\' +file_name):
+        print("파일이 존재합니다.") 
 
 def main(): 
     while True:
         print("1. 운동기록입력")
         print("2. 운동기록검색")
         print("3. 종료")
-        choice = input(("입력을 선택하세요 (1번/2번/3번: )"))
+        choice = int(input(("입력을 선택하세요 (1번/2번/3번: )")))
     
-        if choice == '1':
+        if choice == 1:
             name = workout_input("이름")
             year, month, day = workout_input("날짜 (년-월-일):").split('-')
             prepare = workout_input("prepare")
             mainwork = workout_input("mainwork")
             wod = workout_input("WOD")
             bulidup = workout_input("Buildup")    
+            createFolder(file_path,name)
             write_file(year, month, day, prepare, mainwork,wod,bulidup,name)        
             read_file(year,month,day,name)
-        elif choice == '2':
-            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!노트북으로 땡겨오기 test3 중입니다!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-        elif choice == '3':
+        elif choice == 2:
+            search_file()
+        elif choice == 3:
             print("운동 프로그램을 종료합니다.")
             break
         else:
