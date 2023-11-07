@@ -59,7 +59,7 @@ def main():
             write_file(year, month, day, prepare, mainwork,wod,bulidup,name)        
             read_file(year,month,day,name)
         elif choice == '2':
-            pass
+            print("노트북으로 땡겨오기 test 중입니다!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
         elif choice == '3':
             print("운동 프로그램을 종료합니다.")
             break
