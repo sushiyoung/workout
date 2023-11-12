@@ -1,4 +1,5 @@
 import os
+import glob
 
 global file_path
 
@@ -43,12 +44,22 @@ def read_file(year,month,day,name):
 
 def search_file():
     name = workout_input("이름")
+    folder = file_path + name
+    file_name = glob.glob(folder+ '\\*' )
+    print("*"*10+ f"{name}님의 대한 리스트 파일이 존재합니다"+"*"*10)
+    for f in file_name:
+        print(f)
+    print("\n"+"*"*60)
     year, month, day = workout_input("날짜 (년-월-일):").split('-')
-
     file_name = f"{name}-{year}-{month}-{day}.txt"
+    
+    print("*" * 10 + "이 파일의 대한 결과입니다" +"*" * 10+"\n")
 
     if os.path.isfile(file_path+ name+ '\\' +file_name):
-        print("파일이 존재합니다.") 
+        with open(file_path+ name +'\\' + file_name, 'r', encoding='utf-8') as f:
+            file_workout = f.read()
+            print(file_workout) 
+    print("*"*50)
 
 def main(): 
     while True:
