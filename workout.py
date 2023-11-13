@@ -45,11 +45,17 @@ def read_file(year,month,day,name):
 def search_file():
     name = workout_input("이름")
     folder = file_path + name
-    file_name = glob.glob(folder+ '\\*' )
+    
+    if not os.path.exists(folder):
+        print("*"*10+f"{name}님의 폴더가 존재하지 않습니다."+"*"*10)
+        return
+    
+    file_name_list = glob.glob(folder+ '\\*' )
     print("*"*10+ f"{name}님의 대한 리스트 파일이 존재합니다"+"*"*10)
-    for f in file_name:
+    for f in file_name_list:
         print(f)
     print("\n"+"*"*60)
+    
     year, month, day = workout_input("날짜 (년-월-일):").split('-')
     file_name = f"{name}-{year}-{month}-{day}.txt"
     
@@ -58,8 +64,11 @@ def search_file():
     if os.path.isfile(file_path+ name+ '\\' +file_name):
         with open(file_path+ name +'\\' + file_name, 'r', encoding='utf-8') as f:
             file_workout = f.read()
-            print(file_workout) 
-    print("*"*50)
+            print(file_workout)
+    else:
+        print(f"{name}님의 운동기록이 없습니다") 
+    
+    print("\n"+"*"*60)
 
 def main(): 
     while True:
