@@ -121,9 +121,8 @@ def update_file():
         else:
             print(f"{name}님의 해당 날짜에 대한 기존 운동기록이 존재하지 않습니다.")
     except OSError:
-        pass
-    except ValueError:
-        pass
+        print("branch update test")
+    
 
 
 def main(): 
