@@ -1,7 +1,9 @@
 import os
 import glob
+import shutil
 
 global file_path
+
 
 def workout_input(prompt):
     return input(f"{prompt}을 입력하세요: ")
@@ -121,8 +123,61 @@ def update_file():
         else:
             print(f"{name}님의 해당 날짜에 대한 기존 운동기록이 존재하지 않습니다.")
     except OSError:
-        print("branch update test")
+        print("Error : updatefile"+ folder_path)
     
+
+def Delete_file():
+    try:
+        name = workout_input("삭제할 사람의 이름을 입력하세요")
+        folder_path = get_file_path(name)
+        
+        if not os.path.exists(folder_path):
+            print("*"*10+f"{name}님의 폴더가 존재하지 않습니다."+"*"*10)
+            return
+        print("*"*30)
+        print("삭제 옵션을 선택하세요:")
+        print("1. 폴더 전체 삭제:")
+        print("2. 특정 날짜txt 파일 삭제 ")
+        print("*"*30)
+        
+        option_Choice = int(input("선택 (1번/2번/)"))
+        
+        if option_Choice == 1:
+            recheck_delete = int(input(f"정말 {name}의 폴더를 삭제하시겠습니까? (1/예 2/아니오) : "))
+            if recheck_delete == 1:
+                shutil.rmtree(folder_path)
+                print("*"*30 + f"{name}의 폴더가 삭제되었습니다."+"*"*30)
+                return
+            else:
+                print("*"*30 + f"{name}의 폴더삭제를 취소합니다."+"*"*30)
+        elif option_Choice == 2:
+            file_name_list = glob.glob(folder_path+ '\\*' )
+            print("*"*10+ f"{name}님의 대한 리스트 파일이 존재합니다"+"*"*10)
+        
+            for f in file_name_list:
+                print(f)
+            print("\n"+"*"*60)
+        
+        
+        year, month, day = workout_input("삭제할 날짜 (년-월-일):").split('-')
+        file_name = f"{name}-{year}-{month}-{day}.txt"
+        
+
+        if os.path.exists(folder_path+ '\\' +file_name):
+            recheck_delete = int(input(f"정말 {file_name}의 파일을 삭제하시겠습니까? (1/예 2/아니오) : "))
+            if recheck_delete == 1:
+                os.remove(folder_path+ '\\' +file_name)
+                print("*"*10+f"{file_name} 파일이 삭제되었습니다."+"*"*10)
+                
+            else:
+                print("파일 삭제가 취소되었습니다.")
+        
+    except ValueError:
+        print("숫자입력 다시하세요")
+
+    except OSError:
+        print("Error : 오류발생")
+
 
 
 def main(): 
@@ -130,8 +185,9 @@ def main():
         print("1. 운동기록입력")
         print("2. 운동기록검색")
         print("3. 운동기록수정")
-        print("4. 종료")
-        choice = int(input(("입력을 선택하세요 (1번/2번/3번/4번: )")))
+        print("4. 운동기록삭제")
+        print("5. 종료")
+        choice = int(input(("입력을 선택하세요 (1번/2번/3번/4번/5번: )")))
     
         if choice == 1:
             name = workout_input("이름")
@@ -144,15 +200,21 @@ def main():
             write_file(year, month, day, prepare, mainwork,wod,bulidup,name)        
             read_file(year,month,day,name)
         elif choice == 2:
+            print("*"*30+"운동기록을 검색합니다"+"*"*30+"\n")
             search_file()
         
         elif choice == 3:
-            print("운동기록을 수정합니다"+"\n")
+            print("*"*30+"운동기록을 수정합니다"+"*"*30+"\n")
             update_file()
 
         elif choice == 4:
-            print("운동 프로그램을 종료합니다."+"\n")
+            print("*"*30+"운동기록을 삭제합니다"+"*"*30+"\n")
+            Delete_file()
+        
+        elif choice == 5:
+            print("*"*30+"프로그램을 종료합니다."+"*"*30+"\n")
             break
+
         else:
             print("번호를 다시입력하세요"+"\n")
     
