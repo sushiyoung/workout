@@ -1,9 +1,9 @@
 import os
 import glob
 import shutil
+import constant
 
 global file_path
-
 
 def workout_input(prompt):
     return input(f"{prompt}을 입력하세요: ")
@@ -11,6 +11,10 @@ def workout_input(prompt):
 def get_file_path(name):
     abspath = os.path.dirname(os.path.abspath(__file__))
     return os.path.join(abspath, f'Bellgym_record{name}')
+
+def get_file_path_v2(id):
+    abspath = os.path.dirname(os.path.abspath(__file__))
+    return os.path.join(abspath, f'Bellgym_record/{id}')
     
 def createFolder(name):
     try:
@@ -20,6 +24,17 @@ def createFolder(name):
             print("*"*30+f"{name} 폴더가 생성되었습니다."+"*"*30)
         else:
             print("*"*30+f"{name} 폴더가 이미 존재합니다."+"*"*30)
+    except OSError:
+        print('Error: Creating directory.' + folder_path)
+
+def createFolder_v2(id):
+    try:
+        folder_path = get_file_path_v2(id)
+        if not os.path.exists(folder_path):
+            os.makedirs(folder_path)
+            print("*"*30+f"{id} 폴더가 생성되었습니다."+"*"*30)
+        else:
+            print("*"*30+f"{id} 폴더가 이미 존재합니다."+"*"*30)
     except OSError:
         print('Error: Creating directory.' + folder_path)
 
@@ -39,10 +54,34 @@ def write_file(year,month,day,prepare,mainwork,wod,bulidup,name):
             f.write(file_workout)
     except OSError:
         print("Error: file path" + file_name)  
+def write_file_v2(year,month,day,prepare,mainwork,wod,bulidup,name,id):
+    try:
+        #folder_path : Bellgym_record/[id]/
+        folder_path = get_file_path_v2(id) 
+        file_name = f"{year}-{month}-{day}.txt"
+        file_workout = (
+            f"이름 : {name}\n"
+            f"입력날짜는 : {year}년 {month}월 {day}일 입니다.\n"
+            f"오늘의 prepare는 : {prepare}\n"
+            f"오늘의 mainwork은 : {mainwork}\n"
+            f"오늘의 wod는 : {wod}\n"
+            f"오늘의 buildup은 {bulidup}\n"
+        )
+        with open(folder_path +'\\' + file_name, 'w', encoding='utf-8') as f:
+            f.write(file_workout)
+    except OSError:
+        print("Error: file path" + file_name)  
 
 def read_file(year,month,day,name):              
     folder_path = get_file_path(name)
     file_name = f"{name}-{year}-{month}-{day}.txt"
+    with open(folder_path +'\\' + file_name, 'r', encoding='utf-8') as f:
+        file_workout = f.read()
+    print(file_workout)
+
+def read_file_v2(year, month, day, name, id):              
+    folder_path = get_file_path_v2(id)
+    file_name = f"{year}-{month}-{day}.txt"
     with open(folder_path +'\\' + file_name, 'r', encoding='utf-8') as f:
         file_workout = f.read()
     print(file_workout)
@@ -74,6 +113,33 @@ def search_file():
         print(f"{name}님의 운동기록이 없습니다") 
     
     print("\n"+"*"*60)
+
+def search_file_v2():
+    id = workout_input("id")
+    folder_path = get_file_path_v2(id)
+    if not os.path.exists(folder_path):
+        print("*"*10+f"{id}님의 폴더가 존재하지 않습니다."+"*"*10)
+        return constant.NOT_FOUND_FOLDER
+    
+    file_id_list = glob.glob(folder_path+ '\\*' )
+    print("*"*10+ f"{id}님의 대한 리스트 파일이 존재합니다"+"*"*10)
+    for f in file_id_list:
+        print(f)
+    print("\n"+"*"*60)
+    
+    year, month, day = workout_input("날짜 (년-월-일):").split('-')
+    file_name = f"{year}-{month}-{day}.txt"
+    
+    print("*" * 10 + "이 파일의 대한 결과입니다" +"*" * 10+"\n")
+
+    if os.path.isfile(folder_path+ '\\' +file_name):
+        with open(folder_path +'\\' + file_name, 'r', encoding='utf-8') as f:
+            file_workout = f.read()
+            print(file_workout)
+    else:
+        print(f"{id}님의 운동기록이 없습니다") 
+    
+    print("\n"+"*"*60)    
 
 
 def update_file():
@@ -179,7 +245,6 @@ def Delete_file():
         print("Error : 오류발생")
 
 
-
 def main(): 
     while True:
         print("1. 운동기록입력")
@@ -190,19 +255,29 @@ def main():
         choice = int(input(("입력을 선택하세요 (1번/2번/3번/4번/5번: )")))
     
         if choice == 1:
+            id = workout_input("ID")
             name = workout_input("이름")
             year, month, day = workout_input("날짜 (년-월-일):").split('-')
             prepare = workout_input("prepare")
             mainwork = workout_input("mainwork")
             wod = workout_input("WOD")
             bulidup = workout_input("Buildup")    
+
+            # v1
             createFolder(name)
             write_file(year, month, day, prepare, mainwork,wod,bulidup,name)        
             read_file(year,month,day,name)
+
+            # v2
+            createFolder_v2(id)
+            write_file_v2(year, month, day, prepare, mainwork, wod, bulidup, name, id)
+            read_file_v2(year, month, day, name, id)
+            
         elif choice == 2:
             print("*"*30+"운동기록을 검색합니다"+"*"*30+"\n")
-            search_file()
-        
+            val = search_file_v2()
+            if val == constant.NOT_FOUND_FOLDER :
+                search_file()
         elif choice == 3:
             print("*"*30+"운동기록을 수정합니다"+"*"*30+"\n")
             update_file()
