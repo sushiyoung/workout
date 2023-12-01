@@ -38,7 +38,7 @@ def createFolder_v2(id):
     except OSError:
         print('Error: Creating directory.' + folder_path)
 
-def write_file(year,month,day,prepare,mainwork,wod,bulidup,name):
+def write_file(year, month, day, prepare, mainwork, wod, bulidup, name):
     try:    
         folder_path = get_file_path(name)
         file_name = f"{name}-{year}-{month}-{day}.txt"
@@ -54,6 +54,7 @@ def write_file(year,month,day,prepare,mainwork,wod,bulidup,name):
             f.write(file_workout)
     except OSError:
         print("Error: file path" + file_name)  
+
 def write_file_v2(year,month,day,prepare,mainwork,wod,bulidup,name,id):
     try:
         #folder_path : Bellgym_record/[id]/
@@ -191,6 +192,54 @@ def update_file():
     except OSError:
         print("Error : updatefile"+ folder_path)
     
+def update_file_v2():
+    try:
+        id = workout_input("수정할 사람의 ID을 입력하세요")
+        folder_path = get_file_path_v2(id)
+        if not os.path.exists(folder_path):
+            print("*"*10+f"{id}님의 폴더가 존재하지 않습니다."+"*"*10)
+            return constant.NOT_FOUND_FOLDER
+        file_id_list = glob.glob(folder_path+ '\\*' )
+        print("*"*10+ f"{id}님의 대한 리스트 파일이 존재합니다"+"*"*10)
+        for f in file_id_list:
+            print(f)
+        print("\n"+"*"*60)
+
+        year, month, day = workout_input("수정할 날짜 (년-월-일):").split('-')
+        file_name = f"{year}-{month}-{day}.txt"
+    
+        if os.path.isfile(folder_path+ '\\' +file_name):
+            print("1. Prepare 수정")
+            print("2. Mainwork 수정")
+            print("3. WOD 수정")
+            print("4. Buildup 수정")
+            choice = int(input(("수정할 부분을 선택하세요 (1번/2번/3번/4번: )")))
+            
+            with open(folder_path +'\\' + file_name, 'a', encoding='utf-8') as f:
+                f.write("\n\n*** 추가 기록 ***\n")
+                f.write(f"날짜: {year}-{month}-{day}\n")
+
+                if choice == 1:
+                    prepare = workout_input("수정할 prepare")
+                    f.write(f"Prepare: {prepare}\n")
+                elif choice == 2:
+                    mainwork = workout_input("수정할 mainwork")
+                    f.write(f"Mainwork: {mainwork}\n")
+                elif choice == 3:
+                    wod = workout_input("수정할 WOD")
+                    f.write(f"WOD: {wod}\n")
+                elif choice == 4:
+                    buildup = workout_input("수정할 Buildup")
+                    f.write(f"Buildup: {buildup}\n")
+                else:
+                    print("올바르지 않은 선택입니다. 업데이트를 취소합니다.")
+                    return
+
+            print(f"{id}님의 운동기록이 성공적으로 업데이트되었습니다.")
+        else:
+            print(f"{id}님의 해당 날짜에 대한 기존 운동기록이 존재하지 않습니다.")
+    except OSError:
+        print("Error : updatefile"+ folder_path)
 
 def Delete_file():
     try:
@@ -244,6 +293,60 @@ def Delete_file():
     except OSError:
         print("Error : 오류발생")
 
+def Delete_file_v2():
+    try:
+        id = workout_input("삭제할 ID를 입력하세요")
+        folder_path = get_file_path_v2(id)
+        
+        if not os.path.exists(folder_path):
+            print("*"*10+f"{id}님의 폴더가 존재하지 않습니다."+"*"*10)
+            return constant.NOT_FOUND_FOLDER
+        print("*"*30)
+        print("삭제 옵션을 선택하세요:")
+        print("1. 폴더 전체 삭제:")
+        print("2. 특정 날짜txt 파일 삭제 ")
+        print("*"*30)
+        
+        option_Choice = int(input("선택 (1번/2번/)"))
+        
+        if option_Choice == 1:
+            recheck_delete = int(input(f"정말 {id}의 폴더를 삭제하시겠습니까? (1/예 2/아니오) : "))
+            if recheck_delete == 1:
+                shutil.rmtree(folder_path)
+                print("*"*30 + f"{id}의 폴더가 삭제되었습니다."+"*"*30)
+                return
+            else:
+                print("*"*30 + f"{id}의 폴더삭제를 취소합니다."+"*"*30)
+        elif option_Choice == 2:
+            file_id_list = glob.glob(folder_path+ '\\*' )
+            print("*"*10+ f"{id}님의 대한 리스트 파일이 존재합니다"+"*"*10)
+        
+            for f in file_id_list:
+                print(f)
+            print("\n"+"*"*60)
+        
+        
+        year, month, day = workout_input("삭제할 날짜 (년-월-일):").split('-')
+        file_name = f"{year}-{month}-{day}.txt"
+        
+
+        if os.path.exists(folder_path+ '\\' +file_name):
+            recheck_delete = int(input(f"정말 {file_name}의 파일을 삭제하시겠습니까? (1/예 2/아니오) : "))
+            if recheck_delete == 1:
+                os.remove(folder_path+ '\\' +file_name)
+                print("*"*10+f"{file_name} 파일이 삭제되었습니다."+"*"*10)
+                
+            else:
+                print("파일 삭제가 취소되었습니다.")
+        
+    except ValueError:
+        print("숫자입력 다시하세요")
+
+    except OSError:
+        print("Error : 오류발생")
+
+
+
 
 def main(): 
     while True:
@@ -280,11 +383,15 @@ def main():
                 search_file()
         elif choice == 3:
             print("*"*30+"운동기록을 수정합니다"+"*"*30+"\n")
-            update_file()
+            val = update_file_v2()
+            if val == constant.NOT_FOUND_FOLDER :
+                update_file()
 
         elif choice == 4:
             print("*"*30+"운동기록을 삭제합니다"+"*"*30+"\n")
-            Delete_file()
+            val = Delete_file_v2()
+            if val == constant.NOT_FOUND_FOLDER :
+                Delete_file()
         
         elif choice == 5:
             print("*"*30+"프로그램을 종료합니다."+"*"*30+"\n")
