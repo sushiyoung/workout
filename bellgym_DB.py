@@ -1,32 +1,32 @@
 import mysql.connector
 
 
-# MySQL 연결 정보 설정
-config = {
-    'host': '127.0.0.1',
-    'user': 'root',
-    'password': '1234',
-    'database': 'bellgym'
-}
+class bellgym_db:
+    def __init__(self,host,user,paasword,database):
+        self.config = {
+            'host': '127.0.0.1',
+            'user': 'root',
+            'password': '1234',
+            'database': 'bellgym'
+        }
+        self.conn = None
+        self.cursor = None
+    
+    def connect(self):
+        self.conn = mysql.connector.connect(**self.config)
+        self.cursor = self.conn.cursor()
 
-# MySQL 연결 객체 생성
-conn = mysql.connector.connect(**config)
 
-# 커서 생성
-cursor = conn.cursor()
-
-# 예제: 데이터 조회
 select_data_user = "SELECT * FROM user"
 select_data_workout = "SELECT * FROM workout"
 
 
 
 
-# 결과 출력1
 cursor.execute(select_data_user)
 result1 = cursor.fetchall()
 
-# 결과 출력2
+
 cursor.execute(select_data_workout)
 result2 = cursor.fetchall()
 
@@ -79,7 +79,5 @@ print(buildup)
 
 
 
-
-# 연결 해제
 cursor.close()
 conn.close()
