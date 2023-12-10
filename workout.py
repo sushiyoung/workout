@@ -2,6 +2,8 @@ import os
 import glob
 import shutil
 import constant
+from db_connect import BellGymDB
+from user import User
 
 global file_path
 
@@ -346,15 +348,20 @@ def Delete_file_v2():
         print("Error : 오류발생")
 
 
-
+def connect_bellgym_db():
+    db = BellGymDB()
+    db.connect()
+    return db
 
 def main(): 
+    db = connect_bellgym_db()
     while True:
         print("1. 운동기록입력")
         print("2. 운동기록검색")
         print("3. 운동기록수정")
         print("4. 운동기록삭제")
-        print("5. 종료")
+        print("5. 회원정보 보기")
+        print("6. 종료")
         choice = int(input(("입력을 선택하세요 (1번/2번/3번/4번/5번: )")))
     
         if choice == 1:
@@ -392,9 +399,23 @@ def main():
             val = Delete_file_v2()
             if val == constant.NOT_FOUND_FOLDER :
                 Delete_file()
-        
+
         elif choice == 5:
+            result1 = db.selectAll("select * from user")
+            
+            users =[]
+            for row in result1:
+                u = User(row[0], row[1], row[2])
+                users.append(u)
+                
+                
+            print("*"*10 + "user informain" + "*"*10)
+            for u in users:
+                u.introduceMyself()
+        
+        elif choice == 6:
             print("*"*30+"프로그램을 종료합니다."+"*"*30+"\n")
+            db.close()
             break
 
         else:
