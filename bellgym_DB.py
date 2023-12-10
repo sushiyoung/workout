@@ -1,50 +1,46 @@
-# import mysql.connector
+import mysql.connector
+from user import user
 
-
-# class bellgym_db:
-#     def __init__(self,host,user,paasword,database):
-#         self.config = {
-#             'host': '127.0.0.1',
-#             'user': 'root',
-#             'password': '1234',
-#             'database': 'bellgym'
-#         }
-#         self.conn = None
-#         self.cursor = None
+class bellgym_db:
+    def __init__(self):
+        self.config = {
+            'host': '127.0.0.1',
+            'user': 'root',
+            'password': '1234',
+            'database': 'bellgym'
+        }
+        self.conn = None
+        self.cursor = None
     
-#     def connect(self):
-#         self.conn = mysql.connector.connect(**self.config)
-#         self.cursor = self.conn.cursor()
+    def connect(self):
+        self.conn = mysql.connector.connect(**self.config)
+        self.cursor = self.conn.cursor()
 
+db = bellgym_db()
+db.connect()
 
-# select_data_user = "SELECT * FROM user"
+select_data_user = "SELECT * FROM user"
 # select_data_workout = "SELECT * FROM workout"
 
-
-
-
-# cursor.execute(select_data_user)
-# result1 = cursor.fetchall()
+cursor = db.cursor
+conn = db.conn
+cursor.execute(select_data_user)
+result1 = cursor.fetchall()
 
 
 # cursor.execute(select_data_workout)
 # result2 = cursor.fetchall()
 
-
-# ids =[]
-# pwds =[]
-# names =[]
-
-# for row in result1:
-#     ids.append(row[0]),
-#     pwds.append(row[1]),
-#     names.append(row[2])
+users =[]
+for row in result1:
+    u = user(row[0], row[1], row[2])
+    users.append(u)
     
     
-# print("*"*10 + "user informain" + "*"*10)
-# print(ids)
-# print(pwds)
-# print(names)
+    
+print("*"*10 + "user informain" + "*"*10)
+for u in users:
+    u.introduceMyself()
 
 
 # index_count =[]
@@ -79,8 +75,5 @@
 
 
 
-# cursor.close()
-# conn.close()
-
-
-print("branch_error_TEST")
+cursor.close()
+conn.close()
