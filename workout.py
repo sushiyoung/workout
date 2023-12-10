@@ -362,6 +362,7 @@ def main():
         print("4. 운동기록삭제")
         print("5. 회원정보 보기")
         print("6. 종료")
+        print("7. 회원가입")
         choice = int(input(("입력을 선택하세요 (1번/2번/3번/4번/5번: )")))
     
         if choice == 1:
@@ -417,6 +418,13 @@ def main():
             print("*"*30+"프로그램을 종료합니다."+"*"*30+"\n")
             db.close()
             break
+        
+        elif choice == 7:
+            id = workout_input("ID")
+            pwd = workout_input("PWD")
+            name = workout_input("Name")
+            record = (id, pwd, name) 
+            db.insert("insert into user (id, password, name) values (%s, %s, %s)", record) 
 
         else:
             print("번호를 다시입력하세요"+"\n")

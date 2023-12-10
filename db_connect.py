@@ -25,10 +25,15 @@ class BellGymDB:
         self.cursor.execute(query)
         return self.cursor.fetchall()
     
+    def insert(self, query, record):
+        self.cursor.execute(query, record)
+        self.conn.commit()
+    
 
 
 # db = BellGymDB()
 # db.connect()
+# db.insert("insert into user (id, password, name) values(%s, %s, %s)", ("a", "b", "c"))
 
 # select_data_user = "SELECT * FROM user"
 # select_data_workout = "SELECT * FROM workout"
