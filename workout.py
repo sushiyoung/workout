@@ -357,7 +357,7 @@ def main():
         print("5. 종료")
         choice = int(input(("입력을 선택하세요 (1번/2번/3번/4번/5번: )")))
     
-        if choice == 1:
+        if choice == constant.INPUT_WORKOUT:
             id = workout_input("ID")
             name = workout_input("이름")
             year, month, day = workout_input("날짜 (년-월-일):").split('-')
@@ -376,24 +376,24 @@ def main():
             write_file_v2(year, month, day, prepare, mainwork, wod, bulidup, name, id)
             read_file_v2(year, month, day, name, id)
             
-        elif choice == 2:
+        elif choice == constant.SEARCH_WORKOUT:
             print("*"*30+"운동기록을 검색합니다"+"*"*30+"\n")
             val = search_file_v2()
             if val == constant.NOT_FOUND_FOLDER :
                 search_file()
-        elif choice == 3:
+        elif choice == constant.UPDATE_WORKOUT:
             print("*"*30+"운동기록을 수정합니다"+"*"*30+"\n")
             val = update_file_v2()
             if val == constant.NOT_FOUND_FOLDER :
                 update_file()
 
-        elif choice == 4:
+        elif choice == constant.DELETE_WORKOUT:
             print("*"*30+"운동기록을 삭제합니다"+"*"*30+"\n")
             val = Delete_file_v2()
             if val == constant.NOT_FOUND_FOLDER :
                 Delete_file()
         
-        elif choice == 5:
+        elif choice == constant.FINISH_WORKOUT:
             print("*"*30+"프로그램을 종료합니다."+"*"*30+"\n")
             break
 
