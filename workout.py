@@ -374,10 +374,11 @@ def main():
         print("2. 운동기록검색")
         print("3. 운동기록수정")
         print("4. 운동기록삭제")
-        print("5. 회원정보 보기")
-        print("6. 종료")
-        print("7. 회원가입")
-        choice = int(input(("입력을 선택하세요 (1번/2번/3번/4번/5번: )")))
+        print("5. 회원가입")
+        print("6. 회원정보 보기")
+        print("7. 회원정보 삭제")
+        print("8. 종료")
+        choice = int(input(("입력을 선택하세요 (1번~8번: )")))
 
         if choice == constant.INPUT_WORKOUT:
             id = workout_input("ID")
@@ -404,6 +405,7 @@ def main():
             val = search_file_v2()
             if val == constant.NOT_FOUND_FOLDER:
                 search_file()
+
         elif choice == constant.UPDATE_WORKOUT:
             print("*"*30+"운동기록을 수정합니다"+"*"*30+"\n")
             val = update_file_v2()
@@ -415,6 +417,15 @@ def main():
             val = Delete_file_v2()
             if val == constant.NOT_FOUND_FOLDER:
                 Delete_file()
+
+        elif choice == constant.SIGNUP_USER:
+            id = workout_input("ID")
+            pwd = workout_input("PWD")
+            name = workout_input("Name")
+            record = (id, pwd, name)
+            db.insert(
+                "insert into user (id, password, name) values (%s, %s, %s)", record)
+            print("*"*20+f"{name}님의 ID인 {id}가 등록되었습니다!!!"+"*"*20)
 
         elif choice == constant.SELECT_USER:
             result1 = db.selectAll("select * from user")
@@ -428,18 +439,21 @@ def main():
             for u in users:
                 u.introduceMyself()
 
-        elif choice == constant.FINISH_WORKOUT:
-            print("*"*30+"프로그램을 종료합니다."+"*"*30+"\n")
-            db.close()
-            break
-
-        elif choice == constant.SIGNUP_USER:
+        elif choice == constant.DELETE_USER:
             id = workout_input("ID")
             pwd = workout_input("PWD")
             name = workout_input("Name")
             record = (id, pwd, name)
-            db.insert(
-                "insert into user (id, password, name) values (%s, %s, %s)", record)
+            db.delete(
+                "delete from user where id = %s and password = %s and name = %s", (
+                    record)
+            )
+            print("*"*20+f"{name}님의 ID인 {id}가 삭제되었습니다!!!"+"*"*20)
+
+        elif choice == constant.FINISH_WORKOUT:
+            print("*"*30+"프로그램을 종료합니다."+"*"*30+"\n")
+            db.close()
+            break
 
         else:
             print("번호를 다시입력하세요"+"\n")

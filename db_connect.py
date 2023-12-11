@@ -1,6 +1,7 @@
 import mysql.connector
 from user import User
 
+
 class BellGymDB:
     def __init__(self):
         self.config = {
@@ -24,11 +25,14 @@ class BellGymDB:
     def selectAll(self, query):
         self.cursor.execute(query)
         return self.cursor.fetchall()
-    
+
     def insert(self, query, record):
         self.cursor.execute(query, record)
         self.conn.commit()
-    
+
+    def delete(self, query, record):
+        self.cursor.execute(query, record)
+        self.conn.commit()
 
 
 # db = BellGymDB()
@@ -51,9 +55,8 @@ class BellGymDB:
 # for row in result1:
 #     u = User(row[0], row[1], row[2])
 #     users.append(u)
-    
-    
-    
+
+
 # print("*"*10 + "user informain" + "*"*10)
 # for u in users:
 #     u.introduceMyself()
@@ -88,4 +91,3 @@ class BellGymDB:
 # print(sub)
 # print(wod)
 # print(buildup)
-
