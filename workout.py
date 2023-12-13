@@ -376,9 +376,10 @@ def main():
         print("4. 운동기록삭제")
         print("5. 회원가입")
         print("6. 회원정보 보기")
-        print("7. 회원정보 삭제")
-        print("8. 종료")
-        choice = int(input(("입력을 선택하세요 (1번~8번: )")))
+        print("7. 회원정보 수정")
+        print("8. 회원정보 삭제")
+        print("9. 종료")
+        choice = int(input(("입력을 선택하세요 (1번~9번: )")))
 
         if choice == constant.INPUT_WORKOUT:
             id = workout_input("ID")
@@ -438,6 +439,17 @@ def main():
             print("*"*10 + "user informain" + "*"*10)
             for u in users:
                 u.introduceMyself()
+
+        elif choice == constant.UPDATE_USER:
+            id = workout_input("ID")
+            pwd = workout_input("PWD")
+            new_pwd = workout_input("NEW PWD")
+            record = (new_pwd, id, pwd)
+            db.update(
+                "update user set password = %s where id = %s and password = %s", (
+                    record)
+            )
+            print(f"{id}님의 비밀번호가 성공적으로 변경되었습니다.")
 
         elif choice == constant.DELETE_USER:
             id = workout_input("ID")
