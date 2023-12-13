@@ -430,6 +430,9 @@ def main():
 
         elif choice == constant.SELECT_USER:
             result1 = db.selectAll("select * from user")
+            if result1 == -1:
+                print("table does not exist")
+                continue
 
             users = []
             for row in result1:

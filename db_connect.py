@@ -1,4 +1,5 @@
 import mysql.connector
+from mysql.connector import errorcode
 from user import User
 
 
@@ -24,7 +25,12 @@ class BellGymDB:
         self.conn.close()
 
     def selectAll(self, query):
-        self.cursor.execute(query)
+        try:
+            self.cursor.execute(query)
+        except mysql.connector.Error as err:
+            if err.errno == errorcode.ER_NO_SUCH_TABLE:
+                return -1
+
         return self.cursor.fetchall()
 
     def insert(self, query, record):
@@ -32,8 +38,11 @@ class BellGymDB:
         self.conn.commit()
 
     def delete(self, query, record):
-        self.cursor.execute(query, record)
-        self.conn.commit()
+        try:
+            self.cursor.execute(query, record)
+            self.conn.commit()
+        except mysql.connector.Error as err:
+            print("err code : ", err.errno)
 
     def update(self, query, record):
         self.cursor.execute(query, record)
