@@ -1,7 +1,7 @@
 import mysql.connector
 
 
-class user:
+class User:
     def __init__(self, id, pwd, name):
         self.id = id
         self.pwd = pwd
