@@ -4,6 +4,7 @@ import shutil
 import constant
 from db_connect import BellGymDB
 from user import User
+from workout import Workout
 from datetime import datetime
 
 global file_path
@@ -154,7 +155,42 @@ def search_file_v2():
         print(f"{id}님의 운동기록이 없습니다")
 
     print("\n"+"*"*60)
+    
 
+def search_file_db(db):
+    try:    
+        id = workout_input("검색할 ID를 입력하세요: ")
+        result1 = db.selectAll(f"select * from workout where id = '{id}'")
+        
+        if not result1:
+            print(f"{id}님의 운동기록이 존재하지 않습니다.")
+            return
+        
+        print("*"*10 + f"{id}님의 workout 날짜 리스트" + "*"*10)
+        date_list = set(row[2] for row in result1)
+        for date in date_list:
+            print(date)
+        print("*"*53)
+
+        date_input = workout_input("검색할 날짜를 입력하세요 (년-월-일): ")
+        
+        workouts = []
+        for row in result1:
+            u = Workout(row[1], row[2], row[3], row[4], row[5], row[6])
+            workouts.append(u)
+        
+        print("*"*10 + f"{id}님의 workout informain" + "*"*10)
+        for u in workouts:
+            u.introduceWorkout()
+
+        sorted_workouts = [u for u in workouts if u.date.strftime('%Y-%m-%d') == date_input]
+
+        if not sorted_workouts:
+            print(f"{id}님의 {date} 날짜에 대한 운동기록이 존재하지 않습니다.")
+            return
+    
+    except Exception as e:
+        print(f"Error: {e}")
 
 def update_file():
     try:
@@ -171,7 +207,7 @@ def update_file():
 
         year, month, day = workout_input("수정할 날짜 (년-월-일):").split('-')
         file_name = f"{name}-{year}-{month}-{day}.txt"
-
+        
         if os.path.isfile(folder_path + '\\' + file_name):
             print("1. Prepare 수정")
             print("2. Mainwork 수정")
@@ -182,7 +218,7 @@ def update_file():
             with open(folder_path + '\\' + file_name, 'a', encoding='utf-8') as f:
                 f.write("\n\n*** 추가 기록 ***\n")
                 f.write(f"날짜: {year}-{month}-{day}\n")
-
+                
                 if choice == 1:
                     prepare = workout_input("수정할 prepare")
                     f.write(f"Prepare: {prepare}\n")
@@ -256,7 +292,7 @@ def update_file_v2():
         print("Error : updatefile" + folder_path)
 
 
-def Delete_file():
+def delete_file():
     try:
         name = workout_input("삭제할 사람의 이름을 입력하세요")
         folder_path = get_file_path(name)
@@ -309,7 +345,7 @@ def Delete_file():
         print("Error : 오류발생")
 
 
-def Delete_file_v2():
+def delete_file_v2():
     try:
         id = workout_input("삭제할 ID를 입력하세요")
         folder_path = get_file_path_v2(id)
@@ -409,9 +445,10 @@ def main():
 
         elif choice == constant.SEARCH_WORKOUT:
             print("*"*30+"운동기록을 검색합니다"+"*"*30+"\n")
-            val = search_file_v2()
-            if val == constant.NOT_FOUND_FOLDER:
-                search_file()
+            # val = search_file_v2()
+            # if val == constant.NOT_FOUND_FOLDER:
+            #     search_file()
+            search_file_db(db)
 
         elif choice == constant.UPDATE_WORKOUT:
             print("*"*30+"운동기록을 수정합니다"+"*"*30+"\n")
@@ -421,9 +458,9 @@ def main():
 
         elif choice == constant.DELETE_WORKOUT:
             print("*"*30+"운동기록을 삭제합니다"+"*"*30+"\n")
-            val = Delete_file_v2()
+            val = delete_file_v2()
             if val == constant.NOT_FOUND_FOLDER:
-                Delete_file()
+                delete_file()
 
         elif choice == constant.SIGNUP_USER:
             id = workout_input("ID")
