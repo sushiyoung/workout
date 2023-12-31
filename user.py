@@ -8,11 +8,12 @@ class User:
         self.name = name
 
     def introduceMyself(self):
-        print("제 소개를 시작하겠습니다!!!")
+        print("*"* 40)
+        print(f"{self.id}님 의 정보입니다")
         print("id : " , self.id)
         print("pwd : ", self.pwd)
         print("name : ", self.name)
-
+        print("*" * 40)
 
 
 #----------------controller (시키는 사람) -----------------------#

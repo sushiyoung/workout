@@ -32,7 +32,8 @@ class BellGymDB:
                 return -1
 
         return self.cursor.fetchall()
-
+    
+    
     def insert(self, query, record):
         self.cursor.execute(query, record)
         self.conn.commit()
