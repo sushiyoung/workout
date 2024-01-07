@@ -1,11 +1,8 @@
 import os
 import glob
 import shutil
-import constant
-from db_connect import BellGymDB
-from user import User
-from workout import Workout
-from datetime import datetime
+import constant_local
+
 
 global file_path
 
@@ -134,7 +131,7 @@ def search_file_v2():
     folder_path = get_file_path_v2(id)
     if not os.path.exists(folder_path):
         print("*"*10+f"{id}님의 폴더가 존재하지 않습니다."+"*"*10)
-        return constant.NOT_FOUND_FOLDER
+        return constant_local.NOT_FOUND_FOLDER
 
     file_id_list = glob.glob(folder_path + '\\*')
     print("*"*10 + f"{id}님의 대한 리스트 파일이 존재합니다"+"*"*10)
@@ -156,41 +153,6 @@ def search_file_v2():
 
     print("\n"+"*"*60)
     
-
-def search_file_db(db):
-    try:    
-        id = workout_input("검색할 ID를 입력하세요: ")
-        result1 = db.selectAll(f"select * from workout where id = '{id}'")
-        
-        if not result1:
-            print(f"{id}님의 운동기록이 존재하지 않습니다.")
-            return
-        
-        print("*"*10 + f"{id}님의 workout 날짜 리스트" + "*"*10)
-        date_list = set(row[2] for row in result1)
-        for date in date_list:
-            print(date)
-        print("*"*53)
-
-        date_input = workout_input("검색할 날짜를 입력하세요 (년-월-일): ")
-        
-        workouts = []
-        for row in result1:
-            u = Workout(row[1], row[2], row[3], row[4], row[5], row[6])
-            workouts.append(u)
-        
-        print("*"*10 + f"{id}님의 workout informain" + "*"*10)
-        for u in workouts:
-            u.introduceWorkout()
-
-        sorted_workouts = [u for u in workouts if u.date.strftime('%Y-%m-%d') == date_input]
-
-        if not sorted_workouts:
-            print(f"{id}님의 {date} 날짜에 대한 운동기록이 존재하지 않습니다.")
-            return
-    
-    except Exception as e:
-        print(f"Error: {e}")
 
 def update_file():
     try:
@@ -248,7 +210,7 @@ def update_file_v2():
         folder_path = get_file_path_v2(id)
         if not os.path.exists(folder_path):
             print("*"*10+f"{id}님의 폴더가 존재하지 않습니다."+"*"*10)
-            return constant.NOT_FOUND_FOLDER
+            return constant_local.NOT_FOUND_FOLDER
         file_id_list = glob.glob(folder_path + '\\*')
         print("*"*10 + f"{id}님의 대한 리스트 파일이 존재합니다"+"*"*10)
         for f in file_id_list:
@@ -352,7 +314,7 @@ def delete_file_v2():
 
         if not os.path.exists(folder_path):
             print("*"*10+f"{id}님의 폴더가 존재하지 않습니다."+"*"*10)
-            return constant.NOT_FOUND_FOLDER
+            return constant_local.NOT_FOUND_FOLDER
         print("*"*30)
         print("삭제 옵션을 선택하세요:")
         print("1. 폴더 전체 삭제:")
@@ -398,27 +360,16 @@ def delete_file_v2():
         print("Error : 오류발생")
 
 
-def connect_bellgym_db():
-    db = BellGymDB()
-    db.connect()
-    return db
-
-
 def main():
-    db = connect_bellgym_db()
     while True:
         print("1. 운동기록입력")
         print("2. 운동기록검색")
         print("3. 운동기록수정")
         print("4. 운동기록삭제")
-        print("5. 회원가입")
-        print("6. 회원정보 보기")
-        print("7. 회원정보 수정")
-        print("8. 회원정보 삭제")
-        print("9. 종료")
+        print("5. 종료")
         choice = int(input(("입력을 선택하세요 (1번~9번: )")))
 
-        if choice == constant.INPUT_WORKOUT:
+        if choice == constant_local.INPUT_WORKOUT:
             id = workout_input("ID")
             name = workout_input("이름")
             year, month, day = map(int, workout_input("날짜 (년-월-일):").split('-'))
@@ -426,12 +377,6 @@ def main():
             mainwork = workout_input("mainwork")
             wod = workout_input("WOD")
             buildup = workout_input("Buildup")
-            date = datetime(year, month, day).date()
-            record = (id, date, prepare, mainwork, wod, buildup)
-            
-            db.insert(
-                "insert into workout (id, date, prepare, mainwork, wod, buildup) values (%s, %s, %s, %s, %s, %s)", record)
-            print("*"*20+f"{name}님의 WORKOUT 등록되었습니다!!!"+"*"*20)
             
             # v1
             createFolder(name)
@@ -443,74 +388,26 @@ def main():
             write_file_v2(year, month, day, prepare, mainwork, wod, buildup, name, id)
             read_file_v2(year, month, day, id)
 
-        elif choice == constant.SEARCH_WORKOUT:
+        elif choice == constant_local.SEARCH_WORKOUT:
             print("*"*30+"운동기록을 검색합니다"+"*"*30+"\n")
-            # val = search_file_v2()
-            # if val == constant.NOT_FOUND_FOLDER:
-            #     search_file()
-            search_file_db(db)
+            val = search_file_v2()
+            if val == constant_local.NOT_FOUND_FOLDER:
+                search_file()
 
-        elif choice == constant.UPDATE_WORKOUT:
+        elif choice == constant_local.UPDATE_WORKOUT:
             print("*"*30+"운동기록을 수정합니다"+"*"*30+"\n")
             val = update_file_v2()
-            if val == constant.NOT_FOUND_FOLDER:
+            if val == constant_local.NOT_FOUND_FOLDER:
                 update_file()
 
-        elif choice == constant.DELETE_WORKOUT:
+        elif choice == constant_local.DELETE_WORKOUT:
             print("*"*30+"운동기록을 삭제합니다"+"*"*30+"\n")
             val = delete_file_v2()
-            if val == constant.NOT_FOUND_FOLDER:
+            if val == constant_local.NOT_FOUND_FOLDER:
                 delete_file()
 
-        elif choice == constant.SIGNUP_USER:
-            id = workout_input("ID")
-            pwd = workout_input("PWD")
-            name = workout_input("Name")
-            record = (id, pwd, name)
-            db.insert(
-                "insert into user (id, password, name) values (%s, %s, %s)", record)
-            print("*"*20+f"{name}님의 ID인 {id}가 등록되었습니다!!!"+"*"*20)
-
-        elif choice == constant.SELECT_USER:
-            result1 = db.selectAll("select * from user")
-            if result1 == -1:
-                print("table does not exist")
-                continue
-
-            users = []
-            for row in result1:
-                u = User(row[0], row[1], row[2])
-                users.append(u)
-
-            print("*"*10 + "user informain" + "*"*10)
-            for u in users:
-                u.introduceMyself()
-
-        elif choice == constant.UPDATE_USER:
-            id = workout_input("ID")
-            pwd = workout_input("PWD")
-            new_pwd = workout_input("NEW PWD")
-            record = (new_pwd, id, pwd)
-            db.update(
-                "update user set password = %s where id = %s and password = %s", (
-                    record)
-            )
-            print(f"{id}님의 비밀번호가 성공적으로 변경되었습니다.")
-
-        elif choice == constant.DELETE_USER:
-            id = workout_input("ID")
-            pwd = workout_input("PWD")
-            name = workout_input("Name")
-            record = (id, pwd, name)
-            db.delete(
-                "delete from user where id = %s and password = %s and name = %s", (
-                    record)
-            )
-            print("*"*20+f"{name}님의 ID인 {id}가 삭제되었습니다!!!"+"*"*20)
-
-        elif choice == constant.FINISH_WORKOUT:
+        elif choice == constant_local.FINISH_WORKOUT:
             print("*"*30+"프로그램을 종료합니다."+"*"*30+"\n")
-            db.close()
             break
 
         else:

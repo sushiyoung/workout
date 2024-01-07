@@ -10,13 +10,15 @@ class Workout:
         self.wod = wod
         self.buildup = buildup
 
-    def introduceMyself(self):
-        print("오늘의 운동입니다")
+    def introduceWorkout(self):
+        print("*" * 40)
+        print(f"{self.id}님 의 운동입니다")
         print("date : ", self.date)
         print("prepare : ", self.prepare)
         print("mainwork : ", self.mainwork)
         print("wod : ", self.wod)
         print("buildup : ", self.buildup)
+        print("*" * 40)
 
 
 # ----------------controller (시키는 사람) -----------------------#
