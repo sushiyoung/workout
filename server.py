@@ -18,26 +18,26 @@ def index():
     # workouts = get_workouts_from_db()
     return render_template('index.html', current_year=current_year, users=users, workouts=workouts)
 
+
+@app.route('/go', methods=['GET'])
+def go():
+    return render_template('search_result.html')
+
 @app.route('/test', methods=['GET'])
 def test():
-    user_id = request.args.get("user_id")
-    result = get_user_by_id(user_id)
-    
-    if user_id is None:
-        return jsonify({"message":"user id  not found"})
-    else:
-        return render_template("search_result.html", user=convertToJson(result))
+    # user_id = request.args.get("user_id")
+    result = get_users()
+    data = convertToJson(result)
+    print(data)
+    return convertToJson(result)
 
 @app.route('/search', methods=['POST'])
 def search():
     data = json.loads(request.data)
-    user_id = data.get("search_user_id",None)
-    
-    user = get_user_by_id(user_id)
-    if user_id is None:
-        return jsonify({"message":"user id  not found"})
-    else:
-        return render_template("search_result.html", user=convertToJson(user))
+    user_id = data.get("search_user_id", None)
+    print("userid : ", user_id)
+    result = get_users()
+    return convertToJson(result)
     
     # if user:
     #     workouts = get_workouts_for_user(user['id'])
@@ -47,17 +47,30 @@ def search():
     #     return redirect('/')
 
 def convertToJson(result):
-    return json.dumps(result, default=lambda o: o.__dict__, sort_keys=True, indent=4, ensure_ascii=False)
+    return json.dumps(result, default=lambda o: o.__dict__, sort_keys=True, ensure_ascii=False)
 
-def get_user_by_id(id):
+
+def get_users():
     # result1 = db.select("SELECT * FROM user where id = %s", (id,))
     result1 = db.selectAll("SELECT * FROM user")
 
     if not result1:
         return "등록된 회원이 아닙니다."
+    users = []
+    for u in result1:
+        users.append(User(u[0], u[1], u[2]))
+    return users
+
+def get_user_by_id(id):
+    result1 = db.select("SELECT * FROM user where id = %s", (id,))
+
+    if not result1:
+        return "등록된 회원이 아닙니다."
     
-    u = User(result1[0], result1[1], result1[2])
-    return u
+    users = []
+    for u in result1:
+        users.append(User(u[0], u[1], u[2]))
+    return users
 
 
 def get_workouts_for_user(id):

@@ -31,7 +31,7 @@ class BellGymDB:
             if err.errno == errorcode.ER_NO_SUCH_TABLE:
                 return -1
 
-        return self.cursor.fetchone()
+        return self.cursor.fetchall()
     
     def selectAll(self, query):
         try:
