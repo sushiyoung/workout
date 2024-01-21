@@ -97,7 +97,7 @@
     <table border="1">
         <tr>
             <th>ID</th>
-            <th>이름</th>
+            <th>Name</th>
             <th>Date</th>
             <th>Prepare</th>
             <th>Main Work</th>
@@ -106,33 +106,22 @@
             <th>수정</th>
             <th>삭제</th>
         </tr>
-        <tr>
-            <td>1</td>
-            <td>John Doe</td>
-            <td>2024-01-15</td>
-            <td>Prepare Data</td>
-            <td>Main Work Data</td>
-            <td>WOD Data</td>
-            <td>Buildup Data</td>
-            <td><button class="update-button">수정</button></td>
-            <td><button class="delete-button">삭제</button></td>
-        </tr>
-        <!-- 추가적인 데이터 행들을 여기에 추가 -->
-    </table>
-
-    {% if keyword %}
-    <h3>검색 결과: "{{ keyword }}"</h3>
-    <table border="1">
-        <tr>
-            <th>결과</th>
-        </tr>
-        {% for result in results %}
-        <tr>
-            <td>{{ result }}</td>
-        </tr>
+        {% for user in users %}
+            {% for workout in user.workouts %}
+                <tr>
+                    <td>{{ user.id }}</td>
+                    <td>{{ user.name }}</td>
+                    <td>{{ workout.date }}</td>
+                    <td>{{ workout.prepare }}</td>
+                    <td>{{ workout.main }}</td>
+                    <td>{{ workout.wod }}</td>
+                    <td>{{ workout.buildup }}</td>
+                    <td><button class="update-button">수정</button></td>
+                    <td><button class="delete-button">삭제</button></td>
+                </tr>
+            {% endfor %}
         {% endfor %}
     </table>
-    {% endif %}
 
     <footer>
         <p>&copy; {{ current_year }} Bellgym Workout Recording</p>
