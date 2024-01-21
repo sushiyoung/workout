@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Result</title>
+</head>
+
+<body>
+    <h2>Search Result</h2>
+    {% if user %}
+        {% for u in user %}
+            <h3>User Information</h3>
+            
+        {% endfor %}
+    {% else %}
+        <p>No users found</p>
+    {% endif %}
+</body>
+
+</html>

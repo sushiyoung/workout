@@ -24,6 +24,15 @@ class BellGymDB:
         self.cursor.close()
         self.conn.close()
 
+    def select(self, query, record):
+        try:
+            self.cursor.execute(query, record)
+        except mysql.connector.Error as err:
+            if err.errno == errorcode.ER_NO_SUCH_TABLE:
+                return -1
+
+        return self.cursor.fetchone()
+    
     def selectAll(self, query):
         try:
             self.cursor.execute(query)
