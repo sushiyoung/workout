@@ -50,34 +50,29 @@
 
 
 
-            $("#search_btn").on('click', function () {
-                var id = $('#search_input').val();
-                var jsonData = {
-                    search_user_id: id,
-                };
-                $.ajax({
-                    type: "POST",
-                    url: "/search",
-                    dataType: "json",
-                    contentType: "application/json",
-                    data: JSON.stringify(jsonData),
-                    success: function (json) {
-                        alert(JSON.stringify(json));
-                        var list = $.parseJSON(json);
-                        var listLen = list.length;
-                        alert("len : ", listLen);
-                        var tableStr = $("#bellgym_table");
-                        var contentStr = "";
-                        for (var i = 0; i < listLen; i++) {
-                            contentStr = "<tr><td>" + list[i].id + "</td><td>" + list[i].name + "</td></tr>";
-                            tableStr.append(contentStr);
-                        }
-                        
-                    },
-                });      
+            $(document).ready(function () {
+                $("#search_btn").on('click', function () {
+                    var id = $('#search_input').val();
+                    var jsonData = {
+                        search_user_id: id,
+                    };
+                    $.ajax({
+                        type: "POST",
+                        url: "/search",
+                        dataType: "json",
+                        contentType: "application/json",
+                        data: JSON.stringify(jsonData),
+                        success: function (result) {
+                            // 결과를 기존 테이블 내용을 지우고 새로 추가
+                            $("#bellgym_table tbody").empty();
+                            $.each(result, function (index, user) {
+                                var contentStr = "<tr><td>" + user.id + "</td><td>" + user.name + "</td></tr>";
+                                $("#bellgym_table tbody").append(contentStr);
+                            });
+                        },
+                    });
+                });
             });
-           
-        });
     </script>
 </head>
 <meta charset="UTF-8">
@@ -173,22 +168,30 @@
         <tr>
             <th>ID</th>
             <th>Name</th>
-            <!-- <th>Date</th>
-            <th>Prepare</th>
-            <th>Main Work</th>
-            <th>WOD</th>
-            <th>Buildup</th>
+            // <!-- <th>Date</th>
+            // <th>Prepare</th>
+            // <th>Main Work</th>
+            // <th>WOD</th>
+            // <th>Buildup</th>
             <th>수정</th>
             <th>삭제</th> -->
+        {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.name }}</td>
+                // <!-- <td>{{ user.workout.date }}</td>
+                // <td>{{ user.workout.prepare }}</td>
+                // <td>{{ user.workout.main }}</td>
+                // <td>{{ user.workout.wod }}</td>
+                // <td>{{ user.workout.buildup }}</td> -->
+                <td><button class="update-button">수정</button></td>
+                <td><button class="delete-button">삭제</button></td>
         </tr>
     </table>
-    
     <footer>
         <p>&copy; {{ current_year }} Bellgym Workout Recording</p>
     </footer>
 </body>
-
-
 
 
 </html>

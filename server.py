@@ -36,8 +36,11 @@ def search():
     data = json.loads(request.data)
     user_id = data.get("search_user_id", None)
     print("userid : ", user_id)
-    result = get_users()
-    return convertToJson(result)
+    
+    
+    result = get_user_by_id(user_id)
+    
+    return jsonify(result)
     
     # if user:
     #     workouts = get_workouts_for_user(user['id'])
@@ -55,21 +58,21 @@ def get_users():
     result1 = db.selectAll("SELECT * FROM user")
 
     if not result1:
+        return {"ERROR": "등록된 회원이 아닙니다."}
+    
+    user = [User(u[0], u[1], u[2]) for u in result1]
+    return user
+
+def get_user_by_id(id):
+    result1 = db.select("SELECT * FROM user where id = %s", (id,))
+
+    if not result1:
         return "등록된 회원이 아닙니다."
     
-    users = [User(u[0], u[1], u[2]) for u in result1]
+    users = []
+    for u in result1:
+        users.append(User(u[0], u[1], u[2]))
     return users
-
-# def get_user_by_id(id):
-#     result1 = db.select("SELECT * FROM user where id = %s", (id,))
-
-#     if not result1:
-#         return "등록된 회원이 아닙니다."
-    
-#     users = []
-#     for u in result1:
-#         users.append(User(u[0], u[1], u[2]))
-#     return users
 
 
 # def get_workouts_for_user(id):
