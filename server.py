@@ -34,13 +34,14 @@ def test():
 @app.route('/search', methods=['POST'])
 def search():
     data = json.loads(request.data)
-    user_id = data.get("search_user_id", None)
+    user_id = data.get("search_user_id", "None")
     print("userid : ", user_id)
     
     
-    result = get_user_by_id(user_id)
-    
-    return jsonify(result)
+    # result = get_user_by_id(user_id)
+    result = get_users()
+    # return jsonify(result)
+    return convertToJson(result)
     
     # if user:
     #     workouts = get_workouts_for_user(user['id'])
@@ -71,7 +72,10 @@ def get_user_by_id(id):
     
     users = []
     for u in result1:
-        users.append(User(u[0], u[1], u[2]))
+        user = User(u[0], u[1], u[2])
+        user.introduceMyself()
+        users.append(user)
+        
     return users
 
 
