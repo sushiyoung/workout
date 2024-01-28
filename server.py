@@ -2,7 +2,6 @@ from flask import Flask, request, redirect, render_template, flash, jsonify, Res
 from datetime import datetime
 import os
 import json
-import mysql.connector
 
 from user import User
 from db_connect import BellGymDB
@@ -15,12 +14,11 @@ db.connect()
 @app.route('/') 
 def index():
     current_year = datetime.now().year
-    users = get_users_testms()
+    users = get_users_information()
     # users = get_users_from_db()
     # workouts = get_workouts_from_db()
-    # return render_template('index.html', current_year=current_year, users=[], workouts=[])
-    print(users)
-    return render_template('index.html', current_year=current_year, users= users)
+    print("usersInformation :" ,users)
+    return render_template('index.html', current_year=current_year, user_list = users)
 
 
 @app.route('/go', methods=['GET'])
@@ -82,8 +80,7 @@ def get_user_by_id(id):
         
     return users
 
-
-def get_users_testms():
+def get_users_information():
     result1 = db.selectAll("SELECT * FROM user")
     return result1
 

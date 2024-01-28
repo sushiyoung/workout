@@ -107,20 +107,14 @@
             <th>삭제</th>
         </tr>
         <tbody>
-        {% for user in users %}
-            <!-- {% for workout in user.workouts %} -->
+        {% for user in user_list %}
                 <tr>
-                    <td>{{ user.id }}</td>
-                    <td>{{ user.name }}</td>
-                    <!-- <td>{{ workout.date }}</td>
-                    <td>{{ workout.prepare }}</td>
-                    <td>{{ workout.main }}</td>
-                    <td>{{ workout.wod }}</td>
-                    <td>{{ workout.buildup }}</td> -->
+                    <td>{{ user[0] }}</td>
+                    <td>{{ user[2] }}</td>
+                    
                     <td><button class="update-button">수정</button></td>
                     <td><button class="delete-button">삭제</button></td>
                 </tr>
-            <!-- {% endfor %} -->
         {% endfor %}
         </tbody>
     </table>
