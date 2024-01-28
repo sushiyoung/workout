@@ -98,23 +98,29 @@
         <tr>
             <th>ID</th>
             <th>Name</th>
-            <!-- <th>Date</th>
+            <th>Date</th>
             <th>Prepare</th>
             <th>Main Work</th>
             <th>WOD</th>
-            <th>Buildup</th> -->
+            <th>Buildup</th>
             <th>수정</th>
             <th>삭제</th>
         </tr>
         <tbody>
         {% for user in user_list %}
+            {% for workout in workout_list %}
                 <tr>
                     <td>{{ user[0] }}</td>
                     <td>{{ user[2] }}</td>
-                    
+                    <td>{{ workout[2] }}</td>
+                    <td>{{ workout[3] }}</td>
+                    <td>{{ workout[4] }}</td>
+                    <td>{{ workout[5] }}</td>
+                    <td>{{ workout[6] }}</td>
                     <td><button class="update-button">수정</button></td>
                     <td><button class="delete-button">삭제</button></td>
                 </tr>
+            {% endfor %}
         {% endfor %}
         </tbody>
     </table>

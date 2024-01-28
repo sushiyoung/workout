@@ -15,10 +15,10 @@ db.connect()
 def index():
     current_year = datetime.now().year
     users = get_users_information()
-    # users = get_users_from_db()
-    # workouts = get_workouts_from_db()
-    print("usersInformation :" ,users)
-    return render_template('index.html', current_year=current_year, user_list = users)
+    workouts = get_workout_information()
+    # print("usersInformation :" ,users)
+    # print("workoutinformation : " , workouts)
+    return render_template('index.html', current_year=current_year, user_list = users, workout_list = workouts)
 
 
 @app.route('/go', methods=['GET'])
@@ -84,6 +84,9 @@ def get_users_information():
     result1 = db.selectAll("SELECT * FROM user")
     return result1
 
+def get_workout_information():
+    result1 = db.selectAll("SELECT * FROM workout")
+    return result1
 
 
 # def get_workouts_for_user(id):
