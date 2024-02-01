@@ -10,6 +10,8 @@ app = Flask(__name__)
 db = BellGymDB()
 db.connect()
 
+data = 
+
 # localhost:5001/
 @app.route('/') 
 def index():
@@ -33,11 +35,13 @@ def test():
     print(data)
     return convertToJson(result)
 
-@app.route('/search', methods=['POST'])
+@app.route('/search', methods=['GET'])
 def search():
-    data = json.loads(request.data)
-    user_id = data.get("search_user_id", "None")
+    result = json.loads(request.data)
+    user_id = request.args.get("search_user_id", "None")
     print("userid : ", user_id)
+
+    return jsonify(result)
     
     
     # result = get_user_by_id(user_id)

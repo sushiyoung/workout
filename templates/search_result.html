@@ -1,66 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
         $(document).ready(function () {
-            var jsonData = {
-                search_user_id: "ghldud321",
-            };
-            $.ajax({
-                type: "POST",
-                url: "/search",
-                dataType: "json",
-                contentType: "application/json",
-                data: JSON.stringify(jsonData),
-                success: function (yaya) {
-                    alert(typeof(yaya));
-                    var list = $.parseJSON(yaya);
-                    var listLen = list.length;
-                    var tableStr = $("#bellgym_table");
-                    var contentStr = "";
-                    for (var i = 0; i < listLen; i++) {
-                        contentStr = "<tr><td>" + list[i].id + "</td><td>" + list[i].name + "</td></tr>";
-                        tableStr.append(contentStr);
-                    }
-                    
-                },
-            }); 
-            // $.ajax({
-            //     type: "GET",
-            //     url: "/test",
-            //     data: {},
-            //     success: function (json) {
-            //         var list = $.parseJSON(json);
-                    
-            //         var listLen = list.length;
-            //         var tableStr = $("#bellgym_table");
-            //         var contentStr = "";
-            //         for (var i = 0; i < listLen; i++) {
-            //             contentStr = "<tr><td>" + list[i].id + "</td><td>" + list[i].name + "</td></tr>";
-            //             tableStr.append(contentStr);
-            //         }
-
-            //     },
-            // });   
-
-
-
-
             $("#search_btn").on('click', function () {
                 var id = $('#search_input').val();
-                var jsonData = {
-                    search_user_id: id,
-                };
                 $.ajax({
-                    type: "POST",
-                    url: "/search",
+                    type: "GET",
+                    url: "/search?search_user_id=" + id,
                     dataType: "json",
-                    contentType: "application/json",
-                    data: JSON.stringify(jsonData),
-                    success: function (json) {
-                        var list = $.parseJSON(json);
-                        alert("list" + list);
+                    success: function (data) {
+                        alert(typeof (data));
+                        var list = $.parseJSON(data);
                         var listLen = list.length;
                         var tableStr = $("#bellgym_table");
                         var contentStr = "";
@@ -68,11 +21,9 @@
                             contentStr = "<tr><td>" + list[i].id + "</td><td>" + list[i].name + "</td></tr>";
                             tableStr.append(contentStr);
                         }
-                        
                     },
-                });      
+                });
             });
-           
         });
     </script>
 </head>
@@ -165,26 +116,23 @@
         <button id="search_btn">검색</button>
     </div>
 
-    <table id = "bellgym_table">
+    <table id="bellgym_table">
         <tr>
             <th>ID</th>
             <th>Name</th>
-            <!-- <th>Date</th>
+            <th>Date</th>
             <th>Prepare</th>
             <th>Main Work</th>
             <th>WOD</th>
             <th>Buildup</th>
             <th>수정</th>
-            <th>삭제</th> -->
+            <th>삭제</th>
         </tr>
     </table>
-    
+
     <footer>
         <p>&copy; {{ current_year }} Bellgym Workout Recording</p>
     </footer>
 </body>
-
-
-
 
 </html>
