@@ -36,11 +36,13 @@ def test():
 
 @app.route('/search', methods=['GET'])
 def search():
-    # result = json.loads(request.data)
-    user_id = request.args.get("search_user_id", "None")
+    current_year = datetime.now().year
+    user_id = request.args.get("search_id")
     print("userid : ", user_id)
-
-    return jsonify(result)
+    searched_users = search_users_information(user_id)
+    print("searched_users : " , searched_users)
+    return render_template('search_jhy.html', current_year=current_year, searched_user_list = searched_users)
+   
     
     
     # result = get_user_by_id(user_id)
@@ -90,6 +92,10 @@ def get_users_information():
 def get_workout_information():
     result1 = db.selectAll("SELECT * FROM workout")
     return result1
+
+def search_users_information(id):
+    result = db.selectAll(f"SELECT * FROM user where id = '{id}'")
+    return result
 
 
 # def get_workouts_for_user(id):
