@@ -90,6 +90,8 @@
         <form action="/search" method="GET">
             <input type="text" id="search_id" name="search_id" placeholder="ID를 입력하세요">
             <button type="submit" id ="search_button">검색</button>
+            <input type="text" id="search_id" name="search_id" placeholder="이름을 입력하세요">
+            <button type="submit" id ="search_button">검색</button>
         </form>
     </div>
 
@@ -98,19 +100,30 @@
         <tr>
             <th>ID</th>
             <th>Name</th>
+            <th>Date</th>
+            <th>Prepare</th>
+            <th>Main Work</th>
+            <th>WOD</th>
+            <th>Buildup</th>
             <th>수정</th>
             <th>삭제</th>
         </tr>
         <tbody>
-        {% for searcheduser in searched_user_list %}
+            {% for combine in user_workout_combine %}
                 <tr>
-                    <td>{{ searcheduser[0] }}</td>
-                    <td>{{ searcheduser[2] }}</td>
+                    <td>{{ combine['user'].id }}</td>
+                    <td>{{ combine['user'].name }}</td>
+                    <td>{{ combine['workout'].date }}</td>
+                    <td>{{ combine['workout'].prepare }}</td>
+                    <td>{{ combine['workout'].mainwork }}</td>
+                    <td>{{ combine['workout'].wod }}</td>
+                    <td>{{ combine['workout'].buildup }}</td>
                     <td><button class="update-button">수정</button></td>
                     <td><button class="delete-button">삭제</button></td>
                 </tr>
-        {% endfor %}
+            {% endfor %}
         </tbody>
+
     </table>
 
     <footer>
