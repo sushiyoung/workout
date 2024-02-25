@@ -88,10 +88,8 @@
 
     <div>
         <form action="/search" method="GET">
-            <input type="text" id="search_id" name="search_id" placeholder="ID를 입력하세요">
-            <button type="submit" id ="search_button">검색</button>
-            <input type="text" id="search_id" name="search_id" placeholder="이름을 입력하세요">
-            <button type="submit" id ="search_button">검색</button>
+            <input type="text" id="search_query" name="search_query" placeholder="ID를 입력하세요">
+            <button type="submit" id="search_button">검색</button>
         </form>
     </div>
 
@@ -111,13 +109,13 @@
         <tbody>
             {% for combine in user_workout_combine %}
                 <tr>
-                    <td>{{ combine['user'].id }}</td>
-                    <td>{{ combine['user'].name }}</td>
-                    <td>{{ combine['workout'].date }}</td>
-                    <td>{{ combine['workout'].prepare }}</td>
-                    <td>{{ combine['workout'].mainwork }}</td>
-                    <td>{{ combine['workout'].wod }}</td>
-                    <td>{{ combine['workout'].buildup }}</td>
+                    <td>{{ combine['id'] }}</td>
+                    <td>{{ combine['name'] }}</td>
+                    <td>{{ combine['date'] }}</td>
+                    <td>{{ combine['prepare'] }}</td>
+                    <td>{{ combine['mainwork'] }}</td>
+                    <td>{{ combine['wod'] }}</td>
+                    <td>{{ combine['buildup'] }}</td>
                     <td><button class="update-button">수정</button></td>
                     <td><button class="delete-button">삭제</button></td>
                 </tr>
@@ -131,10 +129,10 @@
     </footer>
 
     <script>
-      
-        document.getElementById('search_button').addEventListener('click', function(){
+
+        document.getElementById('search_button').addEventListener('click', function () {
             var inputText = document.getElementById('search_input').value;
-           alert(inputText); 
+            alert(inputText);
         })
     </script>
 
