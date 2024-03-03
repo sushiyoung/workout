@@ -1,3 +1,4 @@
+from typing import List
 from flask import Flask, request, redirect, render_template, flash, jsonify, Response, url_for
 from datetime import datetime
 import os
@@ -25,35 +26,59 @@ def index():
 @app.route('/search', methods = ['GET'])
 def search():
     current_year = datetime.now().year
+    search = request.args.get("select")
     search_query = request.args.get("search_query")
-    print("RESULT QUERY : ", search_query)
+
+    print("RESULT QUERY : ", search_query, search)
 
     if search_query:
-        search_results = search_user_workout(search_query)
-        user_workout_combine = search_user_workout(search_query)
-        return render_template('search_jhy.html', user_workout_combine=user_workout_combine, current_year=current_year, search_results = search_results)
+    
+        user_workout_combine = search_user_workout(search, search_query)
+        return render_template('search_jhy.html', user_workout_combine=user_workout_combine, current_year=current_year)
     else:
         return "No Search by ID"
 
 
 # -------------------------------------------------------------------------------------------------------
 
-def get_user_workout_information():
-    result = db.selectAll(
-        "SELECT user.id, user.name, workout.date, workout.prepare, workout.mainwork, workout.wod, workout.buildup FROM user INNER JOIN workout ON user.id = workout.id")
-    user_workout_combine = [{'id': record[0], 'name': record[1], 'date': record[2], 'prepare': record[3],
-                             'mainwork': record[4], 'wod': record[5], 'buildup': record[6]} for record in result]
-    return user_workout_combine
+def get_user_workout_information()->List[dict]: #[{}, {}] 이런 형태로 리턴
+    query = """
+            SELECT user.id, user.name, workout.date, workout.prepare, workout.main, workout.sub, workout.wod, workout.buildup 
+            FROM user INNER JOIN workout ON user.id = workout.id
+            """
+    try:
+        records, cols = db.selectAll(query)
+        user_workout_combine = []
+        for record in records:
+            workout = {}
+            for col, rec in zip(cols, record):
+                workout[col] = rec
+            user_workout_combine.append(workout)
+        return user_workout_combine
+    except:
+        return []
 
-
-def search_user_workout(search_query):
-    query = ("SELECT user.id, user.name, workout.date, workout.prepare, workout.mainwork, workout.wod, workout.buildup FROM user INNER JOIN workout ON user.id = workout.id WHERE user.id = %s" )
     
-    records = db.selectAll(query, (search_query))
-    user_workout_combine = [{'id': record[0], 'name': record[1], 'date': record[2], 'prepare': record[3],
-                             'mainwork': record[4], 'wod': record[5], 'buildup': record[6]} for record in records]
-    print("RESULT : " , records)
+
+def search_user_workout(search, search_query):
+    print(search)
+    query = f"""
+            SELECT user.id, user.name, workout.date, workout.prepare, workout.main, workout.sub, workout.wod, workout.buildup 
+            FROM user INNER JOIN workout ON user.id = workout.id
+            WHERE user.{search} = "{search_query}"
+            """
+    
+    records, cols = db.selectAll(query)
+    print(records, cols)
+    user_workout_combine = []
+    for record in records:
+        workout = {}
+        for col, rec in zip(cols, record):
+            workout[col] = rec
+        user_workout_combine.append(workout)
+        
     return user_workout_combine
+    # return []
 
 if __name__ == '__main__':
     app.run(port=5001, debug=True)

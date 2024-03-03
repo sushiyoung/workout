@@ -36,11 +36,13 @@ class BellGymDB:
     def selectAll(self, query):
         try:
             self.cursor.execute(query)
+            column_names = [i[0] for i in self.cursor.description]
+            
+            return self.cursor.fetchall(), column_names
         except mysql.connector.Error as err:
-            if err.errno == errorcode.ER_NO_SUCH_TABLE:
-                return -1
+            print(err)
+            return -1
 
-        return self.cursor.fetchall()
     
     
     def insert(self, query, record):

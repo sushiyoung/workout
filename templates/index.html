@@ -88,7 +88,11 @@
 
     <div>
         <form action="/search" method="GET">
-            <input type="text" id="search_query" name="search_query" placeholder="ID를 입력하세요">
+            <select name="select" id="field">
+                <option value="id">id</option>
+                <option value="name">name</option>
+            </select>
+            <input type="text" id="search_query" name="search_query" placeholder="값을 입력하세요">
             <button type="submit" id ="search_button">검색</button>
         </form>
     </div>
@@ -101,6 +105,7 @@
             <th>Date</th>
             <th>Prepare</th>
             <th>Main Work</th>
+            <th>Sub Work</th>
             <th>WOD</th>
             <th>Buildup</th>
             <th>수정</th>
@@ -113,7 +118,8 @@
                     <td>{{ combine['name'] }}</td>
                     <td>{{ combine['date'] }}</td>
                     <td>{{ combine['prepare'] }}</td>
-                    <td>{{ combine['mainwork'] }}</td>
+                    <td>{{ combine['main'] }}</td>
+                    <td>{{ combine['sub'] }}</td>
                     <td>{{ combine['wod'] }}</td>
                     <td>{{ combine['buildup'] }}</td>
                     <td><button class="update-button">수정</button></td>

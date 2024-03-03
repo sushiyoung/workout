@@ -105,14 +105,15 @@ def main():
                 name = workout_input("이름")
                 year, month, day = map(int, workout_input("날짜 (년-월-일):").split('-'))
                 prepare = workout_input("prepare")
-                mainwork = workout_input("mainwork")
+                mainwork = workout_input("main")
+                sub = workout_input("sub")
                 wod = workout_input("WOD")
                 buildup = workout_input("Buildup")
                 date = datetime(year, month, day).date()
-                record = (id, date, prepare, mainwork, wod, buildup)
+                record = (id, date, prepare, mainwork, sub, wod, buildup)
             
                 db.insert(
-                    "insert into workout (id, date, prepare, mainwork, wod, buildup) values (%s, %s, %s, %s, %s, %s)", record)
+                    "insert into workout (id, date, prepare, main, sub, wod, buildup) values (%s, %s, %s, %s, %s, %s,%s)", record)
                 print("*"*20+f"{name}님의 WORKOUT 등록되었습니다!!!"+"*"*20)
             except Exception as e:
                 print(f"Error: {e}")
