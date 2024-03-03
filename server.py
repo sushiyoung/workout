@@ -32,7 +32,8 @@ def search():
         search_results = search_user_workout(search_query)
         user_workout_combine = search_user_workout(search_query)
         return render_template('search_jhy.html', user_workout_combine=user_workout_combine, current_year=current_year, search_results = search_results)
-
+    else:
+        return "No Search by ID"
 
 
 # -------------------------------------------------------------------------------------------------------
@@ -46,17 +47,12 @@ def get_user_workout_information():
 
 
 def search_user_workout(search_query):
-    query = (
-        "SELECT user.id, user.name, workout.date, workout.prepare, workout.mainwork, workout.wod, workout.buildup "
-        "FROM user "
-        "INNER JOIN workout ON user.id = workout.id "
-        "WHERE user.id LIKE %s"
-    )
-    # '%'를 사용하여 부분 일치하는 검색을 수행
-    search_param = '%' + search_query + '%'
-    records = db.selectAll(query, (search_param, search_param))
+    query = ("SELECT user.id, user.name, workout.date, workout.prepare, workout.mainwork, workout.wod, workout.buildup FROM user INNER JOIN workout ON user.id = workout.id WHERE user.id = %s" )
+    
+    records = db.selectAll(query, (search_query))
     user_workout_combine = [{'id': record[0], 'name': record[1], 'date': record[2], 'prepare': record[3],
                              'mainwork': record[4], 'wod': record[5], 'buildup': record[6]} for record in records]
+    print("RESULT : " , records)
     return user_workout_combine
 
 if __name__ == '__main__':

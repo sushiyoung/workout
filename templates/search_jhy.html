@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>bellgym result search </title>
+    <title>bellgym result search</title>
     <style>
         body {
             margin: 0;
@@ -81,7 +81,6 @@
 </head>
 
 <body>
-
     <header>
         <h1>search result</h1>
     </header>
@@ -108,20 +107,19 @@
         </tr>
         <tbody>
             {% for combine in user_workout_combine %}
-                <tr>
-                    <td>{{ combine['id'] }}</td>
-                    <td>{{ combine['name'] }}</td>
-                    <td>{{ combine['date'] }}</td>
-                    <td>{{ combine['prepare'] }}</td>
-                    <td>{{ combine['mainwork'] }}</td>
-                    <td>{{ combine['wod'] }}</td>
-                    <td>{{ combine['buildup'] }}</td>
-                    <td><button class="update-button">수정</button></td>
-                    <td><button class="delete-button">삭제</button></td>
-                </tr>
+            <tr>
+                <td>{{ combine['id'] }}</td>
+                <td>{{ combine['name'] }}</td>
+                <td>{{ combine['date'] }}</td>
+                <td>{{ combine['prepare'] }}</td>
+                <td>{{ combine['mainwork'] }}</td>
+                <td>{{ combine['wod'] }}</td>
+                <td>{{ combine['buildup'] }}</td>
+                <td><button class="update-button">수정</button></td>
+                <td><button class="delete-button">삭제</button></td>
+            </tr>
             {% endfor %}
         </tbody>
-
     </table>
 
     <footer>
@@ -129,13 +127,11 @@
     </footer>
 
     <script>
-
         document.getElementById('search_button').addEventListener('click', function () {
-            var inputText = document.getElementById('search_input').value;
+            var inputText = document.getElementById('search_query').value;
             alert(inputText);
         })
     </script>
-
 </body>
 
 </html>
