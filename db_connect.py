@@ -43,8 +43,16 @@ class BellGymDB:
             print(err)
             return -1
 
-    
-    
+    def selectAll_v2(self, query):
+        try:
+            self.cursor.execute(query)
+        except mysql.connector.Error as err:
+            if err.errno == errorcode.ER_NO_SUCH_TABLE:
+                return -1
+
+        return self.cursor.fetchall()
+
+
     def insert(self, query, record):
         self.cursor.execute(query, record)
         self.conn.commit()

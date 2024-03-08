@@ -38,6 +38,14 @@ def search():
     else:
         return "No Search by ID"
 
+@app.route('/update', methods = ['POST'])
+def update():
+    pass
+
+@app.route('/delete', methods = ['POST'])
+def delete():
+    pass
+
 
 # -------------------------------------------------------------------------------------------------------
 
@@ -67,6 +75,7 @@ def search_user_workout(search, search_query):
             FROM user INNER JOIN workout ON user.id = workout.id
             WHERE user.{search} = "{search_query}"
             """
+            #search의 값과 search_query의 값이 일치할 경우만 id = id를 입력해야 검색완료
     
     records, cols = db.selectAll(query)
     print(records, cols)
@@ -78,7 +87,8 @@ def search_user_workout(search, search_query):
         user_workout_combine.append(workout)
         
     return user_workout_combine
-    # return []
+
+
 
 if __name__ == '__main__':
     app.run(port=5001, debug=True)
