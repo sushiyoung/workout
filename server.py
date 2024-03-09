@@ -2,7 +2,6 @@ from typing import List
 from flask import Flask, request, redirect, render_template, flash, jsonify, Response, url_for
 from datetime import datetime
 import os
-import json
 
 from user import User
 from workout import Workout
@@ -42,10 +41,17 @@ def search():
 def update():
     pass
 
-@app.route('/delete', methods = ['POST'])
-def delete():
-    pass
-
+# URL에서 받아올 변수의 데이터 타입을 지정하는 것, 고유식별자
+@app.route('/delete/<string:id>', methods=['DELETE']) 
+def delete(id):
+    print("Recived ID : ", id)
+    try:
+       query = "delete from workout where id = %s"
+       db.delete(query, (id,)) # 튜플형태로 값을 전달
+       return jsonify ({'Message' : 'Success workout delete'}), 200
+    except Exception as e:
+        print("Error", str(e))
+        return jsonify({'Error' : str(e)}), 400
 
 # -------------------------------------------------------------------------------------------------------
 

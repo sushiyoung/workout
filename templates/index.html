@@ -92,8 +92,8 @@
                 <option value="id">id</option>
                 <option value="name">name</option>
             </select>
-            <input type="text" id="search_query" name="search_query" placeholder="값을 입력하세요">
-            <button type="submit" id ="search_button">검색</button>
+            <input type="text" id="search_input" name="search_query" placeholder="값을 입력하세요">
+            <button type="submit" id="search_button">검색</button>
         </form>
     </div>
 
@@ -111,20 +111,20 @@
             <th>수정</th>
             <th>삭제</th>
         </tr>
-        <tbody>
+        <tbody id="workout_table_body"> <!-- 테이블 본문에 ID 추가 -->
             {% for combine in user_workout_combine %}
-                <tr>
-                    <td>{{ combine['id'] }}</td>
-                    <td>{{ combine['name'] }}</td>
-                    <td>{{ combine['date'] }}</td>
-                    <td>{{ combine['prepare'] }}</td>
-                    <td>{{ combine['main'] }}</td>
-                    <td>{{ combine['sub'] }}</td>
-                    <td>{{ combine['wod'] }}</td>
-                    <td>{{ combine['buildup'] }}</td>
-                    <td><button class="update-button">수정</button></td>
-                    <td><button class="delete-button">삭제</button></td>
-                </tr>
+            <tr>
+                <td>{{ combine['id'] }}</td>
+                <td>{{ combine['name'] }}</td>
+                <td>{{ combine['date'] }}</td>
+                <td>{{ combine['prepare'] }}</td>
+                <td>{{ combine['main'] }}</td>
+                <td>{{ combine['sub'] }}</td>
+                <td>{{ combine['wod'] }}</td>
+                <td>{{ combine['buildup'] }}</td>
+                <td><button class="update-button">수정</button></td>
+                <td><button class="delete-button">삭제</button></td>
+            </tr>
             {% endfor %}
         </tbody>
     </table>
@@ -133,12 +133,32 @@
         <p>&copy; {{ current_year }} Bellgym Workout Recording</p>
     </footer>
 
+    <form id="delete_form" action="/delete" method="POST" style="display: none;">
+        <input type="hidden" id="delete_id" name="delete_id">
+    </form>
+
     <script>
-      
-        document.getElementById('search_button').addEventListener('click', function(){
-            var inputText = document.getElementById('search_input').value;
-           alert(inputText); 
-        })
+        // 삭제 버튼 클릭
+        document.getElementById('workout_table_body').addEventListener('click', function (event) {
+            if (event.target.classList.contains('delete-button')) {
+                var row = event.target.closest('tr');
+                var id = row.querySelector('td:first-child').textContent;
+
+                // 서버에 DELETE 요청 보내기
+                fetch(`/delete/${id}`, {
+                    method: 'DELETE',
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+
+                        // 삭제 성공 시 화면에서 제거
+                        row.remove();
+                    })
+                    .catch(error => console.error('ERROR :', error));
+            }
+        });
     </script>
 
 </body>
