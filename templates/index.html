@@ -18,6 +18,10 @@
             padding: 10px;
         }
 
+        td.date-column {
+            width: 100px;
+        }
+
         footer {
             background-color: black;
             color: white;
@@ -34,7 +38,7 @@
         }
 
         input[type="text"] {
-            width: 300px;
+            width: 200px;
             padding: 10px;
             font-size: 16px;
         }
@@ -45,8 +49,8 @@
         }
 
         table {
-            width: 80%;
-            margin: 20px auto;
+            width: 70%;
+            margin: 30px auto;
             border-collapse: collapse;
         }
 
@@ -64,12 +68,13 @@
 
         /* 추가된 스타일 부분 */
         .update-button,
-        .delete-button {
+        .delete-button,
+        .save-button {
             background-color: #4CAF50;
             /* Green */
             border: none;
             color: white;
-            padding: 10px 20px;
+            padding: 5px 10px;
             text-align: center;
             text-decoration: none;
             display: inline-block;
@@ -88,7 +93,8 @@
 
     <div>
         <form action="/search" method="GET">
-            <select name="select" id="field"> <!--- 선택한 선택지를 서버로 제출할 때 사용할 이름-->
+            <select name="select" id="field">
+                <!--- 선택한 선택지를 서버로 제출할 때 사용할 이름-->
                 <option value="id">id</option>
                 <option value="name">name</option>
             </select>
@@ -104,19 +110,20 @@
             <th>Name</th>
             <th>Date</th>
             <th>Prepare</th>
-            <th>Main Work</th>
-            <th>Sub Work</th>
+            <th>Main</th>
+            <th>Sub</th>
             <th>WOD</th>
             <th>Buildup</th>
             <th>수정</th>
             <th>삭제</th>
         </tr>
-        <tbody id="workout_table_body"> <!-- 테이블 본문에 ID 추가 -->
+        <tbody id="workout_table_body">
+            <!-- 테이블 본문에 ID 추가 -->
             {% for combine in user_workout_combine %}
             <tr>
                 <td>{{ combine['id'] }}</td>
                 <td>{{ combine['name'] }}</td>
-                <td>{{ combine['date'] }}</td>
+                <td class="date-column">{{ combine['date'] }}</td>
                 <td>{{ combine['prepare'] }}</td>
                 <td>{{ combine['main'] }}</td>
                 <td>{{ combine['sub'] }}</td>
@@ -143,24 +150,122 @@
             if (event.target.classList.contains('delete-button')) {
                 var row = event.target.closest('tr');
                 var id = row.querySelector('td:first-child').textContent;
+                var date = row.querySelector('td:nth-child(3)').textContent;
 
                 // 서버에 DELETE 요청 보내기
-                fetch(`/delete/${id}`, {
+                fetch(`/delete/${id}/${date}`, { //ID와 DATE 함께전송
                     method: 'DELETE',
                 })
                     .then(response => {
                         if (!response.ok) {
                             throw new Error('Network response was not ok');
                         }
+                        return response.json();
+                    })
+                    .then(data => {
 
                         // 삭제 성공 시 화면에서 제거
                         row.remove();
+                        console.log(data.Message);
                     })
                     .catch(error => console.error('ERROR :', error));
             }
         });
+
+       // 수정 버튼 클릭
+        document.getElementById('workout_table_body').addEventListener('click', function (event) {
+                var row = event.target.closest('tr');
+                if (event.target.classList.contains('update-button')) {
+                    var id = row.querySelector('td:first-child').textContent;
+                    var name = row.querySelector('td:nth-child(2)').textContent;
+                    var date = row.querySelector('td:nth-child(3)').textContent;
+                    var prepare = row.querySelector('td:nth-child(4)').textContent;
+                    var main = row.querySelector('td:nth-child(5)').textContent;
+                    var sub = row.querySelector('td:nth-child(6)').textContent;
+                    var wod = row.querySelector('td:nth-child(7)').textContent;
+                    var buildup = row.querySelector('td:nth-child(8)').textContent;
+
+                    // 수정 가능한 입력란으로 변경
+                    row.innerHTML = `
+                        <td>${id}</td>
+                        <td>${name}</td>
+                        <td><input id="dateInput" type="text" style="width: 130px;" value="${date}"></td>
+                        <td><input id="prepareInput" type="text" style="width: 130px;" value="${prepare}"></td>
+                        <td><input id="mainInput" type="text" style="width: 130px;" value="${main}"></td>
+                        <td><input id="subInput" type="text" style="width: 130px;" value="${sub}"></td>
+                        <td><input id="wodInput" type="text" style="width: 130px;" value="${wod}"></td>
+                        <td><input id="buildupInput" type="text" style="width: 130px;" value="${buildup}"></td>
+                        <td><button class="save-button">저장</button></td>
+                    `;
+                } else if (event.target.classList.contains('save-button')) {
+                    var id = row.querySelector('td:first-child').textContent;
+                    var name = row.querySelector('td:nth-child(2)').textContent;
+                    var date = document.getElementById('dateInput').value;
+                    var prepare = document.getElementById('prepareInput').value;
+                    var main = document.getElementById('mainInput').value;
+                    var sub = document.getElementById('subInput').value;
+                    var wod = document.getElementById('wodInput').value;
+                    var buildup = document.getElementById('buildupInput').value;
+
+                    // 서버에 PUT 요청 보내기
+                    fetch(`/update/${id}/${date}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            'date': date,
+                            'prepare': prepare,
+                            'main': main,
+                            'sub': sub,
+                            'wod': wod,
+                            'buildup': buildup
+                        })
+                    })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+
+                            // 저장 성공 시 화면에 변경된 값으로 업데이트
+                            row.innerHTML = `
+                    <td>${id}</td>
+                    <td>${name}</td>
+                    <td>${date}</td>
+                    <td>${prepare}</td>
+                    <td>${main}</td>
+                    <td>${sub}</td>
+                    <td>${wod}</td>
+                    <td>${buildup}</td>
+                    <td><button class="update-button">수정</button></td>
+                    <td><button class="delete-button">삭제</button></td>
+                `;
+                        })
+                        .catch(error => console.error('ERROR:', error));
+                }
+            });
+
     </script>
 
 </body>
 
 </html>
+
+
+
+
+
+
+
+<!-- -------------------------------------------------------------------------------------------------- -->
+<!--[삭제 버튼을 눌렀을 때, date 값이 다르더라도 같은 id면 삭제 된 이유]
+이전 코드에서 클라이언트에서 서버로 요청을 보낸 후, 응답이 오기 전 화면에서 해당 요소를 삭제하는 비동기적 문제가 있었음
+즉, client는 서버로 요청을 보내고 응답을 기다리지 않은 고 다음 코드를 실행하여 해당 요소를 삭제
+서버가 삭제 요청을 받고 응답을 반환하기 전에 client에서 여러 번으 때문에 동일한 ID에 대해 여러 개의 삭제 요청이 전달되어
+전부가 삭제되는 문제 생김
+
+새로운 코드에서는 fetch()함수로부터 응답에 대해 Json()메서드를 호출하여 json 형식의 데이터를 promise로 반환 그것을
+then()메서를 사용하여 비동적으로 처리
+따라서 응답이 성공했는지를 확인한 후에 json 메서드를 사용하여 서버로부터 받은 json 데이터를 해석, then()메서드에서는
+데이터를 활용하여 필요한 작업만 수행 그래서 화면에서 해당요소만 지울 수 있게 된 것 -->
+<!-- --------------------------------------------------------------------------------------------------------->

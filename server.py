@@ -37,17 +37,42 @@ def search():
     else:
         return "No Search by ID"
 
-@app.route('/update', methods = ['POST'])
-def update():
-    pass
+
+@app.route('/update/<string:id>/<string:date>', methods=['PUT'])
+def update(id, date): #update 할 workout 식별 매개변수
+    try:
+        update_record = request.json # 클라이언트로 전송된 JSON 데이터를 가져와서 저장
+      
+        query = """
+                UPDATE workout SET date = %s, prepare = %s, main = %s, sub = %s, wod = %s, buildup = %s 
+                WHERE id = %s AND date = %s
+                """
+        data = (
+            update_record.get('date'),
+            update_record.get('prepare'),
+            update_record.get('main'),
+            update_record.get('sub'),
+            update_record.get('wod'),
+            update_record.get('buildup'),
+            id,
+            date
+        )
+        print("Modified Workout:", data)
+        db.update(query, data)
+
+        return jsonify({'Message': 'Success workout update'}), 200
+    except Exception as e:
+        return jsonify({'Error': str(e)}), 400
+
 
 # URL에서 받아올 변수의 데이터 타입을 지정하는 것, 고유식별자
-@app.route('/delete/<string:id>', methods=['DELETE']) 
-def delete(id):
+@app.route('/delete/<string:id>/<string:date>', methods=['DELETE']) 
+def delete(id,date):
     print("Recived ID : ", id)
+    print("Recived Date : ", date)
     try:
-       query = "delete from workout where id = %s"
-       db.delete(query, (id,)) # 튜플형태로 값을 전달
+       query = "delete from workout where id = %s and date =%s"
+       db.delete(query, (id,date)) # 튜플형태로 값을 전달
        return jsonify ({'Message' : 'Success workout delete'}), 200
     except Exception as e:
         print("Error", str(e))
