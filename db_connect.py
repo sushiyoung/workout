@@ -37,7 +37,7 @@ class BellGymDB:
         try:
             self.cursor.execute(query)
             column_names = [i[0] for i in self.cursor.description]
-            
+
             return self.cursor.fetchall(), column_names
         except mysql.connector.Error as err:
             print(err)

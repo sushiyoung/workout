@@ -1,5 +1,8 @@
+# Flask에서 secret_key를 설정하지 않으면 세션 데이터를 암호화하고 유지할 수 없음
+# 따라서 Flask는 세션을 안전하게 유지할 수 없다는 에러 발생
+# --------------------------------------------------------------------------------------------------------
 from typing import List
-from flask import Flask, request, redirect, render_template, flash, jsonify, Response, url_for
+from flask import Flask, request, redirect, render_template, flash, jsonify, Response, url_for, session
 from datetime import datetime
 import os
 
@@ -8,29 +11,55 @@ from workout import Workout
 from db_connect import BellGymDB
 
 app = Flask(__name__)
+app.secret_key = os.urandom(24) # 난수생성 24byte
 db = BellGymDB()
 db.connect()
 
 # ---------------------------------------------------------------------------------------------------------
 
 # localhost:5001/
-@app.route('/login', methods=['GET', 'POST'])
-def login():
+@app.route('/', methods=['GET', 'POST'])
+def main():
+    error = None # 초기에는 오류가 없음을 나타냄
+    login_success = False # 로그인 성공 여부를 기본적으로 False로 설정
+
     if request.method == 'POST':
-        # 로그인 정보를 검증하는 코드 추가
-        return '로그인 성공'  # 예시로 성공 시 메시지를 반환하도록 처리
+        id = request.form['id']
+        pwd =request.form['password']
 
-    # GET 요청일 때는 로그인 페이지를 렌더링
-    return render_template('login.html')
+        query = "SELECT id FROM user WHERE id = %s AND password = %s"
+        record =(id, pwd) # 해당기록을 튜플형태로 준비
+        try:
+            result = db.select(query, record)
+
+            #session : 서버와 클라이언트간의 상태를 유지하기 위한 것
+            if result:
+                session['login_user'] =id
+                print("LOGIN SUCCESS :", id)
+                login_success = True
+                flash("로그인이 성공적으로 완료되었습니다.")
+                return redirect(url_for('index'))
+            else:
+                error ="NO ID OR PASSWORD"
+        except Exception as e:
+            error =str(e)
+            print("ERROR :", error)
+
+    return render_template('main.html', error = error, login_success = login_success)
 
 
-@app.route('/')
+@app.route('/index')
 def index():
     current_year = datetime.now().year
-    user_workout_combine = get_user_workout_information()
-    # print("USER WORKOUT INFOR :" , user_workout_combine)
-    return render_template('index.html', user_workout_combine = user_workout_combine, current_year = current_year)
-    
+    if 'login_user' in session:
+        login_user = session['login_user']
+        user_workout_combine = get_user_workout_information(login_user)
+        # print("USER WORKOUT INFOR :" , user_workout_combine)
+        return render_template('index.html', user_workout_combine=user_workout_combine, current_year=current_year)
+    else:
+        return redirect(url_for('main'))
+
+
 
 @app.route('/search', methods = ['GET'])
 def search():
@@ -38,7 +67,7 @@ def search():
     search = request.args.get("select")
     search_query = request.args.get("search_query")
 
-    print("RESULT QUERY : ", search_query, search)
+    # print("RESULT QUERY : ", search_query, search)
 
     if search_query:
     
@@ -81,7 +110,7 @@ def delete(id,date):
     print("Recived ID : ", id)
     print("Recived Date : ", date)
     try:
-       query = "delete from workout where id = %s and date =%s"
+       query = "DELETE FROM workout WHERE id = %s AND date =%s"
        db.delete(query, (id,date)) # 튜플형태로 값을 전달
        return jsonify ({'Message' : 'Success workout delete'}), 200
     except Exception as e:
@@ -90,10 +119,11 @@ def delete(id,date):
 
 # -------------------------------------------------------------------------------------------------------
 
-def get_user_workout_information()->List[dict]: #[{}, {}] 이런 형태로 리턴
-    query = """
+def get_user_workout_information(login_user)->List[dict]: #[{}, {}] 이런 형태로 리턴
+    query = f"""
             SELECT user.id, user.name, workout.date, workout.prepare, workout.main, workout.sub, workout.wod, workout.buildup 
             FROM user INNER JOIN workout ON user.id = workout.id
+            WHERE user.id = '{login_user}'
             """
     try:
         records, cols = db.selectAll(query)
@@ -104,7 +134,8 @@ def get_user_workout_information()->List[dict]: #[{}, {}] 이런 형태로 리�
                 workout[col] = rec
             user_workout_combine.append(workout)
         return user_workout_combine
-    except:
+    except Exception as e:
+        print("ERROR : ", e)
         return []
 
     
@@ -200,3 +231,5 @@ if __name__ == '__main__':
 
 
 # -----------------------------------------------------------------------------------------
+
+
