@@ -14,6 +14,16 @@ db.connect()
 # ---------------------------------------------------------------------------------------------------------
 
 # localhost:5001/
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        # 로그인 정보를 검증하는 코드 추가
+        return '로그인 성공'  # 예시로 성공 시 메시지를 반환하도록 처리
+
+    # GET 요청일 때는 로그인 페이지를 렌더링
+    return render_template('login.html')
+
+
 @app.route('/')
 def index():
     current_year = datetime.now().year
@@ -33,7 +43,7 @@ def search():
     if search_query:
     
         user_workout_combine = search_user_workout(search, search_query)
-        return render_template('search_jhy.html', user_workout_combine=user_workout_combine, current_year=current_year)
+        return render_template('search.html', user_workout_combine=user_workout_combine, current_year=current_year)
     else:
         return "No Search by ID"
 
