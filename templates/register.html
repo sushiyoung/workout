@@ -54,38 +54,38 @@
         }
     </style>
 </head>
-
+                                <!-- <input> : 입력요소 <type> : 입력필드 유형 <id> : 입력 필드의 고유 식별자
+                                <name> : 입력필드 이름(서버로 데이터 전송시 활용)
+                                <placeholder> : 입력 필드에 표시되는 텍스트 -->
 <body>
-    <form method="POST" id="authForm">
+    <form method="POST" action="/register" id="authForm">
         <div>
             <p>
-            <h1> Hello Bell_WORLD</h1>
+            <h1> New Bell_Member</h1>
             </p>
-            <h3> Please Sign-In</h3>
+            <h3> Please Register</h3>
             <p>
-                <input type="text" id="id" name="id" placeholder="id">
+                <input type="text" id="regi_id" name="regi_id" placeholder="id">
             </p>
 
             <p>
-                <input type="password" id="password" name="password" placeholder="password">
+                <input type="password" id="regi_password" name="regi_password" placeholder="password">
+            </p>
+            <p>
+                <input type = "text" id = "regi_name" name = "regi_name" placeholder="name">
             </p>
         </div>
-        <input type="submit" name="sign_in" value="sign in" />
-        <p>
-            <input type="button" value="Register" name="register" onclick="location.href='register'">
-            <!-- location.href는 현재 창의 URL을 나타내며, 클릭 시 이를 변경함으로써 새로운 페이지로 이동 -->
-        </p>
+        <input type="submit" value="Register">
         {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                <script>
-                    alert("{{ message }}");
-                </script>
-            {% endif %}
+        {% if messages %}
+        <script>
+            alert("{{ messages[0] }}");
+        </script>
+        {% endif %}
         {% endwith %}
         {% if error %}
         <p class="error-message">{{ error }}</p>
         {% endif %}
     </form>
 </body>
-
 </html>

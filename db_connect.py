@@ -52,6 +52,17 @@ class BellGymDB:
 
         return self.cursor.fetchall()
 
+    def commit(self):
+        try:
+            self.conn.commit()
+        except mysql.connector.Error as err:
+            print("Commit Error", err)
+    
+    def rollback(self):  # 트랜잭션 내에서 발생한 모든 변경 사항을 취소하고 이전 상태로 복구
+        try:
+            self.conn.rollback()
+        except mysql.connector.errors as err:
+            print("Rollback Error :" , err)
 
     def insert(self, query, record):
         self.cursor.execute(query, record)
@@ -68,6 +79,7 @@ class BellGymDB:
         self.cursor.execute(query, record)
         self.conn.commit()
 
+# ---------------------------------------------------------------------------------------------------    
 
 # db = BellGymDB()
 # db.connect()

@@ -3,12 +3,12 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>bellgym workout recording</title>
     <style>
         body {
             margin: 0;
             padding: 0;
+            font-family: Arial, sans-serif;
         }
 
         header {
@@ -16,10 +16,6 @@
             color: white;
             text-align: center;
             padding: 10px;
-        }
-
-        td.date-column {
-            width: 100px;
         }
 
         footer {
@@ -43,9 +39,16 @@
             font-size: 16px;
         }
 
-        button[type="submit"] {
-            padding: 10px;
+        button[type="submit"],
+        button[type="button"],
+        .save-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            padding: 10px 20px;
             font-size: 16px;
+            margin-left: 5px;
         }
 
         table {
@@ -68,18 +71,13 @@
 
         /* 추가된 스타일 부분 */
         .update-button,
-        .delete-button,
-        .save-button {
+        .delete-button {
             background-color: #4CAF50;
-            /* Green */
             border: none;
             color: white;
             padding: 5px 10px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
             cursor: pointer;
+            font-size: 16px;
             margin-right: 5px;
         }
     </style>
@@ -100,6 +98,7 @@
             </select>
             <input type="text" id="search_input" name="search_query" placeholder="값을 입력하세요">
             <button type="submit" id="search_button">검색</button>
+            <button type="submit" id="add_record_button">운동기록입력</button>
         </form>
     </div>
 
