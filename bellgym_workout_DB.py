@@ -45,8 +45,8 @@ def main():
         elif choice == constant_DB.SELECT_USER:
             try:
                 id = workout_input("검색할 ID")
-                result1 = db.selectAll("select * from user")
-
+                result1 = db.selectAll_v2("select * from user")
+        
                 if not result1:
                     print("등록된 회원이 아닙니다.")
                     continue
@@ -105,14 +105,15 @@ def main():
                 name = workout_input("이름")
                 year, month, day = map(int, workout_input("날짜 (년-월-일):").split('-'))
                 prepare = workout_input("prepare")
-                mainwork = workout_input("mainwork")
+                main = workout_input("main")
+                sub = workout_input("sub")
                 wod = workout_input("WOD")
                 buildup = workout_input("Buildup")
                 date = datetime(year, month, day).date()
-                record = (id, date, prepare, mainwork, wod, buildup)
+                record = (id, date, prepare, main, sub, wod, buildup)
             
                 db.insert(
-                    "insert into workout (id, date, prepare, mainwork, wod, buildup) values (%s, %s, %s, %s, %s, %s)", record)
+                    "insert into workout (id, date, prepare, main, sub, wod, buildup) values (%s, %s, %s, %s, %s, %s,%s)", record)
                 print("*"*20+f"{name}님의 WORKOUT 등록되었습니다!!!"+"*"*20)
             except Exception as e:
                 print(f"Error: {e}")
@@ -120,7 +121,7 @@ def main():
         elif choice == constant_DB.SEARCH_WORKOUT:
             try:    
                 id = workout_input("검색할 ID")
-                result1 = db.selectAll(f"select * from workout where id = '{id}'")
+                result1 = db.selectAll_v2(f"select * from workout where id = '{id}'")
         
                 if not result1:
                     print(f"{id}님의 운동기록이 존재하지 않습니다.")
@@ -136,7 +137,7 @@ def main():
         
                 workouts = []
                 for row in result1:
-                    u = Workout(row[1], row[2], row[3], row[4], row[5], row[6])
+                    u = Workout(row[1], row[2], row[3], row[4], row[5], row[6], row[7])
                     workouts.append(u)
         
                 print("*"*10 + f"{id}님의 workout informain" + "*"*10)
@@ -157,7 +158,7 @@ def main():
             try:
                 id = workout_input("ID")
                 
-                result1 = db.selectAll(f"select * from workout where id = '{id}'")
+                result1 = db.selectAll_v2(f"select * from workout where id = '{id}'")
 
                 if not result1:
                     print(f"{id}님의 운동기록이 존재하지 않습니다.")
@@ -173,7 +174,7 @@ def main():
 
                 workouts = []
                 for row in result1:
-                    u = Workout(row[1], row[2], row[3], row[4], row[5], row[6])
+                    u = Workout(row[1], row[2], row[3], row[4], row[5], row[6], row[7])
                     workouts.append(u)
 
                 sorted_workouts = [u for u in workouts if u.date.strftime('%Y-%m-%d') == date_input]
@@ -188,17 +189,19 @@ def main():
                     u.introduceWorkout()
 
                 prepare = workout_input("수정할 prepare")
-                mainwork = workout_input("수정할 mainwork")
+                main = workout_input("수정할 main")
                 wod = workout_input("수정할 wod")
+                sub = workout_input("수정할 sub")
                 buildup = workout_input("수정할 buildup")
-                record =(prepare, mainwork, wod, buildup,id, date_input)
+                record =(prepare, main, sub, wod, buildup,id, date_input)
                 
                 recheck = input("정말로 수정하시겠습니까? (1: 예, 2: 아니요)")
                 if recheck == '1':
                     query = (
                             "UPDATE workout SET "
                             f"prepare = %s, "
-                            f"mainwork = %s, "
+                            f"main = %s, "
+                            f"sub = %s, "
                             f"wod = %s, "
                             f"buildup = %s "
                             f"WHERE id = %s AND date = %s"
@@ -226,7 +229,7 @@ def main():
                     return
                 
                 
-                result1 = db.selectAll(f"select * from workout where id = '{id}'")
+                result1 = db.selectAll_v2(f"select * from workout where id = '{id}'")
 
                 if not result1:
                     print(f"{id}님의 운동기록이 존재하지 않습니다.")
@@ -241,7 +244,7 @@ def main():
 
                 workouts = []
                 for row in result1:
-                    u = Workout(row[1], row[2], row[3], row[4], row[5], row[6])
+                    u = Workout(row[1], row[2], row[3], row[4], row[5], row[6], row[7])
                     workouts.append(u)
 
                 sorted_workouts = [u for u in workouts if u.date.strftime('%Y-%m-%d') == date_input]
@@ -260,7 +263,7 @@ def main():
                     query = "delete from workout where id = %s and date =%s"
                     record =(id, date_input)
                     db.delete(query, record)
-                    print(f"{id}님으 {date_input} 날짜의 운동이 성공적으로 삭제되었습니다.")
+                    print(f"{id}님의 {date_input} 날짜의 운동이 성공적으로 삭제되었습니다.")
                 elif recheck =='2':
                     print("삭제를 취소합니다")
 

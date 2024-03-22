@@ -24,7 +24,26 @@ class BellGymDB:
         self.cursor.close()
         self.conn.close()
 
+    def select(self, query, record):
+        try:
+            self.cursor.execute(query, record)
+        except mysql.connector.Error as err:
+            if err.errno == errorcode.ER_NO_SUCH_TABLE:
+                return -1
+
+        return self.cursor.fetchall()
+    
     def selectAll(self, query):
+        try:
+            self.cursor.execute(query)
+            column_names = [i[0] for i in self.cursor.description]
+
+            return self.cursor.fetchall(), column_names
+        except mysql.connector.Error as err:
+            print(err)
+            return -1
+
+    def selectAll_v2(self, query):
         try:
             self.cursor.execute(query)
         except mysql.connector.Error as err:
@@ -32,8 +51,19 @@ class BellGymDB:
                 return -1
 
         return self.cursor.fetchall()
+
+    def commit(self):
+        try:
+            self.conn.commit()
+        except mysql.connector.Error as err:
+            print("Commit Error", err)
     
-    
+    def rollback(self):  # 트랜잭션 내에서 발생한 모든 변경 사항을 취소하고 이전 상태로 복구
+        try:
+            self.conn.rollback()
+        except mysql.connector.errors as err:
+            print("Rollback Error :" , err)
+
     def insert(self, query, record):
         self.cursor.execute(query, record)
         self.conn.commit()
@@ -49,6 +79,7 @@ class BellGymDB:
         self.cursor.execute(query, record)
         self.conn.commit()
 
+# ---------------------------------------------------------------------------------------------------    
 
 # db = BellGymDB()
 # db.connect()

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>MAIN</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        #authForm {
+            text-align: center;
+            width: 2000px;
+            /* 폼의 너비 조정 */
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            /* 기본 입력란 스타일 */
+            padding: 20px;
+            /* 입력란 내부 여백 조절 */
+            font-size: 15px;
+            /* 입력란 텍스트 크기 조절 */
+        }
+
+        input[type="text"]::placeholder,
+        input[type="password"]::placeholder {
+            /* place holder 스타일 */
+            font-size: 14px;
+            /* place holder 텍스트 크기 조절 */
+        }
+
+        input[type="submit"],
+        input[type="button"] {
+            background-color: #007bff;
+            /* 파란색 배경 */
+            color: white;
+            /* 글자색 흰색 */
+            border: none;
+            cursor: pointer;
+            width: 183px;
+            /* 버튼 너비 조정 */
+            height: 25px;
+            /* 버튼 높이 조정 */
+            font-size: 13px;
+            /* 글자 크기 조정 */
+            margin-bottom: 10px;
+            /* 버튼 아래 여백 조정 */
+        }
+    </style>
+</head>
+
+<body>
+    <form method="POST" id="authForm">
+        <div>
+            <p>
+            <h1> Hello Bell_WORLD</h1>
+            </p>
+            <h3> Please Sign-In</h3>
+            <p>
+                <input type="text" id="id" name="id" placeholder="id">
+            </p>
+
+            <p>
+                <input type="password" id="password" name="password" placeholder="password">
+            </p>
+        </div>
+        <input type="submit" name="sign_in" value="sign in" />
+        <p>
+            <input type="button" value="Register" name="register" onclick="location.href='register'">
+            <!-- location.href는 현재 창의 URL을 나타내며, 클릭 시 이를 변경함으로써 새로운 페이지로 이동 -->
+        </p>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <script>
+                    alert("{{ message }}");
+                </script>
+            {% endif %}
+        {% endwith %}
+        {% if error %}
+        <p class="error-message">{{ error }}</p>
+        {% endif %}
+    </form>
+</body>
+
+</html>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>bellgym result search</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: black;
+            color: white;
+            text-align: center;
+            padding: 10px;
+        }
+
+        footer {
+            background-color: black;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        form {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        input[type="text"] {
+            width: 300px;
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        button[type="submit"] {
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid black;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            text-align: center;
+        }
+
+        /* 추가된 스타일 부분 */
+        .update-button,
+        .delete-button {
+            background-color: #4CAF50;
+            /* Green */
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            cursor: pointer;
+            margin-right: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>search result</h1>
+    </header>
+
+    <div>
+        <form action="/search" method="GET">
+
+            <input type="text" id="search_query" name="search_query" placeholder="ID를 입력하세요">
+            <button type="submit" id="search_button">검색</button>
+        </form>
+    </div>
+
+    <!-- 수정된 표 부분 -->
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Date</th>
+            <th>Prepare</th>
+            <th>Main Work</th>
+            <th>Sub</th>
+            <th>WOD</th>
+            <th>Buildup</th>
+            <th>수정</th>
+            <th>삭제</th>
+        </tr>
+        <tbody>
+            {% for combine in user_workout_combine %}
+            <tr>
+                <td>{{ combine['id'] }}</td>
+                <td>{{ combine['name'] }}</td>
+                <td>{{ combine['date'] }}</td>
+                <td>{{ combine['prepare'] }}</td>
+                <td>{{ combine['main'] }}</td>
+                <td>{{ combine['sub'] }}</td>
+                <td>{{ combine['wod'] }}</td>
+                <td>{{ combine['buildup'] }}</td>
+                <td><button class="update-button">수정</button></td>
+                <td><button class="delete-button">삭제</button></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <footer>
+        <p>&copy; {{ current_year }} Bellgym search result Recording</p>
+    </footer>
+
+    <script>
+        document.getElementById('search_button').addEventListener('click', function () {
+            var inputText = document.getElementById('search_query').value;
+            alert(inputText);
+        })
+    </script>
+</body>
+
+</html>

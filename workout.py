@@ -2,11 +2,12 @@ import mysql.connector
 
 
 class Workout:
-    def __init__(self, id, date, prepare, mainwork, wod, buildup):
+    def __init__(self, id, date, prepare, main, sub, wod, buildup):
         self.id = id
         self.date = date
         self.prepare = prepare
-        self.mainwork = mainwork
+        self.main = main
+        self.sub = sub
         self.wod = wod
         self.buildup = buildup
 
@@ -15,7 +16,8 @@ class Workout:
         print(f"{self.id}님 의 운동입니다")
         print("date : ", self.date)
         print("prepare : ", self.prepare)
-        print("mainwork : ", self.mainwork)
+        print("main : ", self.main)
+        print("sub :", self.sub)
         print("wod : ", self.wod)
         print("buildup : ", self.buildup)
         print("*" * 40)

@@ -2,16 +2,16 @@ import mysql.connector
 
 
 class User:
-    def __init__(self, id, pwd, name):
+    def __init__(self, id, password, name):
         self.id = id
-        self.pwd = pwd
+        self.password = password
         self.name = name
 
     def introduceMyself(self):
         print("*"* 40)
         print(f"{self.id}님 의 정보입니다")
         print("id : " , self.id)
-        print("pwd : ", self.pwd)
+        print("password : ", self.password)
         print("name : ", self.name)
         print("*" * 40)
 
