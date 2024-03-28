@@ -48,6 +48,19 @@ def main():
 
     return render_template('main.html', error = error, login_success = login_success)
 
+################### 로그아웃 기능###################
+
+
+@app.route('/logout', methods=['GET'])
+def logout():
+    if 'login_user' in session:
+        logout_user = session['login_user']
+        session.pop('login_user', None)
+        print("LOGOUT SUCCESS :", logout_user)
+    else:
+        print("이미 로그아웃 완료되었습니다.")
+    return redirect(url_for('main'))
+
 ####################운동기록 리스트####################
 @app.route('/index')
 def index():
